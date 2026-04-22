@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Renda Passiva — Jornada</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0a0c10;
+  --s1:      #111318;
+  --s2:      #181c24;
+  --s3:      #1e2330;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --gold:    #d4a843;
+  --gold2:   #f0c96a;
+  --teal:    #4ecdc4;
+  --violet:  #9b8afb;
+  --blue:    #5b9cf6;
+  --text:    #e8e6e0;
+  --sub:     #8a8880;
+  --danger:  #e07070;
+  --r1: var(--gold);
+  --r2: var(--teal);
+  --r3: var(--violet);
+  --r4: var(--blue);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::after {
+  content:''; position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:9999;
+}
+
+.bg-glow { position:fixed; width:600px; height:600px; border-radius:50%; filter:blur(140px); pointer-events:none; z-index:0; }
+.glow1 { background:rgba(212,168,67,0.06); top:-200px; left:-100px; }
+.glow2 { background:rgba(78,205,196,0.05); bottom:-100px; right:-100px; }
+
+/* LOGIN */
+#login-screen {
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  z-index:1000; background:var(--bg); padding:20px;
+}
+
+.login-card {
+  background:var(--s1); border:1px solid var(--border);
+  border-radius:24px; padding:48px 40px 40px;
+  width:100%; max-width:380px;
+  position:relative; overflow:hidden;
+  animation:fadeUp 0.5s ease both;
+}
+
+.login-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--teal),transparent);
+}
+
+.login-logo { font-family:'Playfair Display',serif; font-size:28px; color:var(--gold); text-align:center; margin-bottom:6px; }
+.login-sub  { font-size:12px; color:var(--sub); text-align:center; letter-spacing:2px; text-transform:uppercase; margin-bottom:40px; }
+
+.login-field { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.login-field label { font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--sub); }
+.login-field input {
+  background:var(--s2); border:1px solid var(--border); border-radius:10px;
+  padding:13px 16px; color:var(--text); font-family:'JetBrains Mono',monospace;
+  font-size:15px; outline:none; transition:border-color 0.2s; width:100%;
+}
+.login-field input:focus { border-color:var(--gold); }
+.login-field input::placeholder { color:var(--sub); opacity:0.5; }
+
+.login-err { font-size:12px; color:var(--danger); min-height:18px; margin-bottom:8px; text-align:center; }
+
+.btn-login {
+  width:100%; background:var(--gold); color:#0a0c10;
+  border:none; border-radius:10px; padding:14px;
+  font-family:'Outfit',sans-serif; font-weight:700; font-size:15px;
+  cursor:pointer; letter-spacing:0.3px; transition:all 0.2s; margin-top:4px;
+}
+.btn-login:hover { background:var(--gold2); transform:translateY(-1px); }
+.btn-login:active { transform:translateY(0); }
+
+@keyframes shake {
+  0%,100% { transform:translateX(0); }
+  20%,60%  { transform:translateX(-6px); }
+  40%,80%  { transform:translateX(6px); }
+}
+.shake { animation:shake 0.4s ease; }
+
+/* APP */
+#app { display:none; }
+
+.wrap { max-width:900px; margin:0 auto; padding:32px 20px 80px; position:relative; z-index:1; }
+
+header { display:flex; justify-content:space-between; align-items:center; margin-bottom:40px; gap:16px; }
+.brand { display:flex; flex-direction:column; }
+.brand-name { font-family:'Playfair Display',serif; font-size:clamp(22px,4vw,30px); color:var(--gold); letter-spacing:-0.5px; line-height:1; }
+.brand-sub { font-size:11px; color:var(--sub); letter-spacing:3px; text-transform:uppercase; margin-top:4px; }
+.header-right { display:flex; gap:10px; align-items:center; }
+.header-badge { background:var(--s2); border:1px solid var(--border2); border-radius:100px; padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--sub); white-space:nowrap; }
+.header-badge strong { color:var(--teal); font-weight:500; }
+.btn-logout { background:var(--s2); border:1px solid var(--border); border-radius:100px; padding:8px 14px; font-size:11px; color:var(--sub); cursor:pointer; font-family:'Outfit',sans-serif; transition:all 0.2s; white-space:nowrap; }
+.btn-logout:hover { color:var(--danger); border-color:var(--danger); }
+
+/* HERO */
+.hero { background:var(--s1); border:1px solid var(--border); border-radius:20px; padding:28px 28px 24px; margin-bottom:20px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--gold),var(--teal),transparent); }
+.hero-top { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
+.hero-label { font-size:10px; text-transform:uppercase; letter-spacing:2.5px; color:var(--sub); margin-bottom:8px; }
+.pat-badge { display:inline-block; font-size:10px; font-family:"JetBrains Mono",monospace; padding:3px 10px; border-radius:100px; margin-top:8px; letter-spacing:0.5px; }
+.pat-badge.real { background:rgba(78,205,196,0.15); color:var(--teal); }
+.pat-badge.est  { background:rgba(255,255,255,0.06); color:var(--sub); }
+.hero-amount { font-family:'Playfair Display',serif; font-size:clamp(36px,7vw,54px); color:var(--gold); line-height:1; }
+.hero-stats { display:flex; gap:20px; flex-wrap:wrap; }
+.hstat { text-align:right; }
+.hstat-label { font-size:10px; color:var(--sub); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px; }
+.hstat-value { font-family:'JetBrains Mono',monospace; font-size:16px; color:var(--text); }
+.hstat-value.ok { color:var(--teal); }
+.progress-bar { background:var(--s3); border-radius:100px; height:6px; overflow:hidden; margin-bottom:8px; }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--teal)); border-radius:100px; transition:width 1s ease; min-width:2px; }
+.progress-meta { display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--sub); }
+
+/* METRICS */
+.metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
+.metric { background:var(--s1); border:1px solid var(--border); border-radius:14px; padding:18px 20px; }
+.metric-label { font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--sub); margin-bottom:8px; }
+.metric-value { font-family:'JetBrains Mono',monospace; font-size:clamp(16px,3vw,20px); color:var(--text); line-height:1; }
+.metric-value.gold { color:var(--gold); }
+.metric-value.teal { color:var(--teal); }
+.metric-value.violet { color:var(--violet); }
+
+/* ALLOCATIONS — guia de aporte (totais reais ficam nos metrics) */
+.alloc-section { margin-bottom:20px; }
+.alloc-section-label {
+  font-size:10px; text-transform:uppercase; letter-spacing:2px;
+  color:var(--sub); margin-bottom:10px; display:flex; align-items:center; gap:8px;
+}
+.alloc-section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.alloc-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.alloc {
+  background:var(--s2); border:1px solid var(--border); border-radius:10px;
+  padding:12px 14px; display:flex; align-items:center; gap:12px;
+  transition:background 0.2s;
+}
+.alloc:hover { background:var(--s3); }
+.alloc-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.alloc.c1 .alloc-dot { background:var(--r1); }
+.alloc.c2 .alloc-dot { background:var(--r2); }
+.alloc.c3 .alloc-dot { background:var(--r3); }
+.alloc.c4 .alloc-dot { background:var(--r4); }
+.alloc-body { flex:1; min-width:0; }
+.alloc-name { font-size:12px; font-weight:600; color:var(--text); margin-bottom:2px; }
+.alloc-sub  { font-size:11px; color:var(--sub); font-family:'JetBrains Mono',monospace; }
+.alloc-right { text-align:right; flex-shrink:0; }
+.alloc-sug {
+  font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600;
+  margin-bottom:1px;
+}
+.alloc.c1 .alloc-sug { color:var(--r1); }
+.alloc.c2 .alloc-sug { color:var(--r2); }
+.alloc.c3 .alloc-sug { color:var(--r3); }
+.alloc.c4 .alloc-sug { color:var(--r4); }
+.alloc-acc { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub); }
+
+/* CHART */
+.chart-box { background:var(--s1); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; }
+.section-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap:12px; flex-wrap:wrap; }
+.section-title { font-family:'Playfair Display',serif; font-size:18px; color:var(--text); }
+.legend { display:flex; gap:14px; flex-wrap:wrap; }
+.leg-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--sub); }
+.leg-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* REGISTER */
+.register-box { background:var(--s1); border:1px solid var(--border); border-radius:16px; padding:28px; margin-bottom:20px; }
+.register-box h2 { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:4px; }
+.register-desc { font-size:13px; color:var(--sub); margin-bottom:20px; line-height:1.6; }
+.tip-box { background:var(--s2); border-left:3px solid var(--gold); border-radius:0 8px 8px 0; padding:12px 16px; font-size:12px; color:var(--sub); line-height:1.7; margin-bottom:24px; }
+.tip-box strong { color:var(--gold2); }
+.saldo-real-box { background:var(--s2); border:1px solid rgba(78,205,196,0.2); border-radius:10px; padding:14px 16px; margin-bottom:0; }
+.saldo-real-head { display:flex; align-items:flex-start; gap:10px; }
+.saldo-real-title { font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+.saldo-tag { font-size:9px; background:rgba(78,205,196,0.15); color:var(--teal); border-radius:100px; padding:2px 8px; font-weight:600; letter-spacing:1px; text-transform:uppercase; }
+.saldo-real-desc { font-size:11px; color:var(--sub); line-height:1.6; }
+.saldo-indicador { display:inline-flex; align-items:center; gap:5px; font-size:10px; font-family:"JetBrains Mono",monospace; }
+.saldo-indicador.com-saldo { color:var(--teal); }
+.saldo-indicador.sem-saldo { color:var(--sub); }
+
+.form-section-title { font-size:10px; text-transform:uppercase; letter-spacing:2.5px; color:var(--sub); margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+
+.asset-block { background:var(--s2); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:12px; border-left:3px solid; }
+.asset-block.c1 { border-left-color:var(--r1); } .asset-block.c2 { border-left-color:var(--r2); }
+.asset-block.c3 { border-left-color:var(--r3); } .asset-block.c4 { border-left-color:var(--r4); }
+.asset-block-title { font-size:11px; font-weight:600; color:var(--text); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.asset-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.asset-dot.c1 { background:var(--r1); } .asset-dot.c2 { background:var(--r2); }
+.asset-dot.c3 { background:var(--r3); } .asset-dot.c4 { background:var(--r4); }
+.asset-row { display:grid; grid-template-columns:1fr 1.4fr 1.4fr; gap:12px; }
+
+.fg { display:flex; flex-direction:column; gap:6px; }
+.fg label { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--sub); }
+.fg input {
+  background:var(--s3); border:1px solid var(--border); border-radius:8px;
+  padding:10px 13px; color:var(--text); font-family:'JetBrains Mono',monospace;
+  font-size:13px; outline:none; transition:border-color 0.2s; width:100%;
+}
+.fg input:focus { border-color:var(--gold); }
+.fg input::placeholder { color:var(--sub); opacity:0.5; }
+
+.btn-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
+.btn { border:none; border-radius:8px; padding:12px 24px; font-family:'Outfit',sans-serif; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.2s; }
+.btn-primary { background:var(--gold); color:#0a0c10; }
+.btn-primary:hover { background:var(--gold2); transform:translateY(-1px); }
+.btn-ghost { background:var(--s2); border:1px solid var(--border); color:var(--sub); }
+.btn-ghost:hover { border-color:var(--border2); color:var(--text); }
+
+/* HISTORY */
+.history-box { background:var(--s1); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+.history-header { padding:20px 24px 0; }
+table { width:100%; border-collapse:collapse; }
+th { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--sub); text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); font-weight:500; }
+td { padding:12px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text); vertical-align:top; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:var(--s2); }
+
+.badge { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:100px; font-size:11px; font-family:'Outfit',sans-serif; font-weight:500; white-space:nowrap; }
+.badge.c1 { background:rgba(212,168,67,0.15); color:var(--r1); }
+.badge.c2 { background:rgba(78,205,196,0.15); color:var(--r2); }
+.badge.c3 { background:rgba(155,138,251,0.15); color:var(--r3); }
+.badge.c4 { background:rgba(91,156,246,0.15); color:var(--r4); }
+.badge-dot { width:5px; height:5px; border-radius:50%; background:currentColor; }
+.ativo-tag { display:block; font-size:10px; color:var(--text); font-family:'JetBrains Mono',monospace; font-weight:500; margin-top:4px; letter-spacing:0.3px; }
+.ativo-tag::before { content:'◈ '; color:var(--sub); }
+.loc-tag { display:block; font-size:10px; color:var(--sub); font-family:'Outfit',sans-serif; margin-top:2px; }
+.loc-tag::before { content:'📍 '; }
+
+.btn-del { background:none; border:none; color:var(--sub); cursor:pointer; padding:4px 6px; border-radius:4px; font-size:14px; transition:all 0.15s; line-height:1; }
+.btn-del:hover { color:var(--danger); background:rgba(224,112,112,0.1); }
+.empty { text-align:center; padding:56px 20px; color:var(--sub); }
+.empty-icon { font-size:36px; display:block; margin-bottom:12px; opacity:0.4; }
+.empty p { font-size:14px; line-height:2; }
+
+/* TOAST / LOADER */
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--teal); color:#0a0c10; padding:12px 24px; border-radius:100px; font-weight:600; font-size:13px; z-index:9998; opacity:0; transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1); white-space:nowrap; box-shadow:0 8px 32px rgba(78,205,196,0.3); }
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+.toast.err { background:var(--danger); box-shadow:0 8px 32px rgba(224,112,112,0.3); }
+.loader { display:none; position:fixed; inset:0; background:rgba(10,12,16,0.7); z-index:9997; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.loader.show { display:flex; }
+.spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--gold); border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+.hero { animation:fadeUp 0.5s ease both; }
+.metrics { animation:fadeUp 0.5s ease 0.05s both; }
+.alloc-grid { animation:fadeUp 0.5s ease 0.10s both; }
+.chart-box { animation:fadeUp 0.5s ease 0.15s both; }
+.register-box { animation:fadeUp 0.5s ease 0.20s both; }
+.history-box { animation:fadeUp 0.5s ease 0.25s both; }
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .wrap { padding:20px 16px 60px; }
+  header { flex-direction:column; align-items:flex-start; }
+  .header-right { width:100%; justify-content:space-between; }
+  .metrics { grid-template-columns:repeat(3,1fr); gap:10px; }
+  .metric { padding:14px 12px; }
+  .metric-label { font-size:9px; letter-spacing:1px; }
+  .alloc-grid { grid-template-columns:1fr 1fr; }
+  .form-grid { grid-template-columns:1fr; }
+  .asset-row { grid-template-columns:1fr; }
+  .hero-stats { gap:14px; }
+  .hstat { text-align:left; }
+  th, td { padding:10px 10px; font-size:11px; }
+  .section-head { flex-direction:column; align-items:flex-start; }
+  .btn { width:100%; text-align:center; }
+  .btn-row { flex-direction:column; }
+  .login-card { padding:36px 24px 32px; }
+}
+@media (max-width: 400px) {
+  .metrics { grid-template-columns:1fr; }
+  .alloc-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow glow1"></div>
+<div class="bg-glow glow2"></div>
+<div class="loader" id="loader"><div class="spinner"></div></div>
+<div class="toast" id="toast"></div>
+
+<!-- ═══════ LOGIN ═══════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Renda Passiva</div>
+    <div class="login-sub">Acesso restrito</div>
+    <div class="login-field">
+      <label>E-mail</label>
+      <input type="email" id="l-user" placeholder="seu@email.com" autocomplete="email">
+    </div>
+    <div class="login-field">
+      <label>Senha</label>
+      <input type="password" id="l-pass" placeholder="••••••" autocomplete="current-password">
+    </div>
+    <div class="login-err" id="l-err"></div>
+    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- ═══════ APP ═══════ -->
+<div id="app">
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="brand-name">Renda Passiva</div>
+      <div class="brand-sub">Jornada · 41 → 52 anos</div>
+    </div>
+    <div class="header-right">
+      <div class="header-badge">Meta: <strong id="hdr-anos">—</strong> anos restantes</div>
+      <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-top">
+      <div class="hero-main">
+        <div class="hero-label">Patrimônio Total Acumulado</div>
+        <div class="hero-amount" id="total-patrimonio">R$ —</div>
+        <div id="pat-badge" class="pat-badge est">~ estimado</div>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-label">Meta</div><div class="hstat-value">R$ 1.100.000</div></div>
+        <div class="hstat"><div class="hstat-label">Renda estimada/mês</div><div class="hstat-value ok" id="h-renda">R$ —</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-meta"><span id="p-pct">0%</span><span id="p-falta">Faltam R$ —</span></div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Total Aportado</div><div class="metric-value gold" id="m-aportado">R$ —</div></div>
+    <div class="metric"><div class="metric-label">Meses Registrados</div><div class="metric-value teal" id="m-meses">—</div></div>
+    <div class="metric"><div class="metric-label">Reserva (CDB)</div><div class="metric-value violet">R$ 40.000</div></div>
+  </div>
+
+  <!-- ALLOCATIONS -->
+  <div class="alloc-section">
+    <div class="alloc-section-label">Distribuição mensal sugerida · R$ 5.000/mês</div>
+    <div class="alloc-grid">
+      <div class="alloc c1">
+        <div class="alloc-dot"></div>
+        <div class="alloc-body">
+          <div class="alloc-name">RF Inflação</div>
+          <div class="alloc-sub">40% · IPCA+ longo prazo</div>
+        </div>
+        <div class="alloc-right">
+          <div class="alloc-sug">R$ 2.000</div>
+          <div class="alloc-acc" id="a1-acc">Acum.: R$ —</div>
+        </div>
+      </div>
+      <div class="alloc c2">
+        <div class="alloc-dot"></div>
+        <div class="alloc-body">
+          <div class="alloc-name">FIIs</div>
+          <div class="alloc-sub">30% · Fundos imobiliários</div>
+        </div>
+        <div class="alloc-right">
+          <div class="alloc-sug">R$ 1.500</div>
+          <div class="alloc-acc" id="a2-acc">Acum.: R$ —</div>
+        </div>
+      </div>
+      <div class="alloc c3">
+        <div class="alloc-dot"></div>
+        <div class="alloc-body">
+          <div class="alloc-name">Ações Dividendos</div>
+          <div class="alloc-sub">20% · Setor defensivo</div>
+        </div>
+        <div class="alloc-right">
+          <div class="alloc-sug">R$ 1.000</div>
+          <div class="alloc-acc" id="a3-acc">Acum.: R$ —</div>
+        </div>
+      </div>
+      <div class="alloc c4">
+        <div class="alloc-dot"></div>
+        <div class="alloc-body">
+          <div class="alloc-name">RF Pós-fixado</div>
+          <div class="alloc-sub">10% · CDI / liquidez</div>
+        </div>
+        <div class="alloc-right">
+          <div class="alloc-sug">R$ 500</div>
+          <div class="alloc-acc" id="a4-acc">Acum.: R$ —</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="chart-box">
+    <div class="section-head">
+      <div class="section-title">Evolução do Patrimônio</div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#d4a843"></div>Real</div>
+        <div class="leg-item"><div class="leg-dot" style="background:rgba(212,168,67,0.35)"></div>Projeção</div>
+        <div class="leg-item" style="gap:8px"><div style="width:16px;height:2px;background:#4ecdc4;border-radius:2px"></div>Meta R$ 1,1M</div>
+      </div>
+    </div>
+    <canvas id="chart" height="220"></canvas>
+  </div>
+
+  <!-- REGISTER -->
+  <div class="register-box">
+    <h2>Registrar Aporte Mensal</h2>
+    <p class="register-desc">Informe os valores e <strong>onde cada ativo foi comprado</strong> — isso garante que sua família saiba onde encontrá-los.</p>
+
+    <div class="tip-box">
+      <strong>Alocação sugerida para R$ 5.000/mês:</strong><br>
+      RF Inflação R$ 2.000 &nbsp;·&nbsp; FIIs R$ 1.500 &nbsp;·&nbsp; Ações R$ 1.000 &nbsp;·&nbsp; RF Pós R$ 500
+    </div>
+
+    <div class="form-section-title">Mês de referência e saldo</div>
+    <div class="form-grid" style="margin-bottom:8px">
+      <div class="fg"><label>Mês / Ano</label><input type="month" id="f-mes"></div>
+      <div class="fg"><label>Observação geral (opcional)</label><input type="text" id="f-obs" placeholder="ex: dividendos reinvestidos"></div>
+    </div>
+    <div class="saldo-real-box">
+      <div class="saldo-real-head">
+        <div>
+          <div class="saldo-real-title">Saldo real total do mês <span class="saldo-tag">recomendado</span></div>
+          <div class="saldo-real-desc">Informe o montante total das suas carteiras hoje (aportes + rendimentos). Quando preenchido, este valor é usado no gráfico e no patrimônio — é mais preciso que a soma dos aportes.</div>
+        </div>
+      </div>
+      <div class="fg" style="margin-top:12px">
+        <label>Saldo real consolidado (R$)</label>
+        <input type="number" id="f-saldo" placeholder="ex: 52340 — consulte seus extratos" min="0">
+      </div>
+    </div>
+    <div style="margin-bottom:24px"></div>
+
+    <div class="form-section-title">Valores e localização por classe</div>
+
+    <div class="asset-block c1">
+      <div class="asset-block-title"><div class="asset-dot c1"></div>RF Inflação — IPCA+</div>
+      <div class="asset-row">
+        <div class="fg"><label>Valor (R$)</label><input type="number" id="f-rf1" placeholder="2000" min="0"></div>
+        <div class="fg"><label>Ativo(s)</label><input type="text" id="f-ativ1" placeholder="ex: Tesouro IPCA+ 2035, CDB XP..."></div>
+        <div class="fg"><label>Custodiado em</label><input type="text" id="f-loc1" placeholder="ex: Tesouro Direto, XP, BTG..."></div>
+      </div>
+    </div>
+
+    <div class="asset-block c2">
+      <div class="asset-block-title"><div class="asset-dot c2"></div>FIIs — Fundos Imobiliários</div>
+      <div class="asset-row">
+        <div class="fg"><label>Valor (R$)</label><input type="number" id="f-fii" placeholder="1500" min="0"></div>
+        <div class="fg"><label>Ativo(s)</label><input type="text" id="f-ativ2" placeholder="ex: MXRF11, KNRI11, HGLG11..."></div>
+        <div class="fg"><label>Custodiado em</label><input type="text" id="f-loc2" placeholder="ex: XP, Rico, Clear..."></div>
+      </div>
+    </div>
+
+    <div class="asset-block c3">
+      <div class="asset-block-title"><div class="asset-dot c3"></div>Ações — Dividendos</div>
+      <div class="asset-row">
+        <div class="fg"><label>Valor (R$)</label><input type="number" id="f-acao" placeholder="1000" min="0"></div>
+        <div class="fg"><label>Ativo(s)</label><input type="text" id="f-ativ3" placeholder="ex: PETR4, ITUB4, TAEE11..."></div>
+        <div class="fg"><label>Custodiado em</label><input type="text" id="f-loc3" placeholder="ex: XP, Inter, Avenue..."></div>
+      </div>
+    </div>
+
+    <div class="asset-block c4">
+      <div class="asset-block-title"><div class="asset-dot c4"></div>RF Pós-fixado — CDI</div>
+      <div class="asset-row">
+        <div class="fg"><label>Valor (R$)</label><input type="number" id="f-rf2" placeholder="500" min="0"></div>
+        <div class="fg"><label>Ativo(s)</label><input type="text" id="f-ativ4" placeholder="ex: CDB Nubank 110% CDI..."></div>
+        <div class="fg"><label>Custodiado em</label><input type="text" id="f-loc4" placeholder="ex: Nubank, Inter, C6..."></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="salvar()">Registrar Aporte</button>
+      <button class="btn btn-ghost" onclick="limparForm()">Limpar</button>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-box">
+    <div class="history-header">
+      <div class="section-head"><div class="section-title">Histórico de Aportes</div></div>
+    </div>
+    <div id="history-content">
+      <div class="empty"><span class="empty-icon">📊</span><p>Nenhum aporte registrado ainda.<br>Comece pelo formulário acima.</p></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ─── SUPABASE ─────────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://dgisdiwnksuanuunvaxz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_jZn9dNz4w8LyjJ8cN6NZ1A_Nu4yQ5ri';
+const TABLE        = 'aportes';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ─── AUTH — Supabase Auth ─────────────────────────────────────────────────────
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+function showLogin() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('l-user').value = '';
+  document.getElementById('l-pass').value = '';
+}
+
+async function fazerLogin() {
+  const email  = document.getElementById('l-user').value.trim();
+  const senha  = document.getElementById('l-pass').value;
+  const errEl  = document.getElementById('l-err');
+
+  if (!email || !senha) {
+    errEl.textContent = 'Preencha e-mail e senha.';
+    return;
+  }
+
+  loader(true);
+  const { error } = await db.auth.signInWithPassword({ email, password: senha });
+  loader(false);
+
+  if (error) {
+    errEl.textContent = 'E-mail ou senha incorretos.';
+    const card = document.querySelector('.login-card');
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+    document.getElementById('l-pass').value = '';
+    setTimeout(() => errEl.textContent = '', 3000);
+  } else {
+    showApp();
+    init();
+  }
+}
+
+async function logout() {
+  await db.auth.signOut();
+  showLogin();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') fazerLogin();
+});
+
+// Verifica sessão ativa ao carregar
+document.addEventListener('DOMContentLoaded', async () => {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) {
+    showApp();
+    init();
+  }
+  // Escuta mudanças de sessão (ex: token expirado)
+  db.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') showLogin();
+  });
+});
+
+// ─── CARTEIRA ─────────────────────────────────────────────────────────────────
+const META     = 1_100_000;
+const RESERVA  = 40_000;
+const ANO_META = 2036;
+let aportes = [];
+let chart   = null;
+
+async function init() { setMesAtual(); await carregar(); }
+
+function setMesAtual() {
+  const n = new Date();
+  document.getElementById('f-mes').value = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`;
+}
+
+async function carregar() {
+  loader(true);
+  try {
+    const { data, error } = await db.from(TABLE).select('*').order('mes', { ascending: true });
+    if (error) throw error;
+    aportes = data || [];
+    renderAll();
+  } catch(e) {
+    toast('Erro ao conectar com Supabase. Verifique as credenciais.', true);
+    console.error(e);
+  } finally { loader(false); }
+}
+
+async function salvar() {
+  const mes  = document.getElementById('f-mes').value;
+  const rf1  = parseFloat(document.getElementById('f-rf1').value)  || 0;
+  const fii  = parseFloat(document.getElementById('f-fii').value)  || 0;
+  const acao = parseFloat(document.getElementById('f-acao').value) || 0;
+  const rf2  = parseFloat(document.getElementById('f-rf2').value)  || 0;
+  const obs      = document.getElementById('f-obs').value.trim();
+  const saldoStr = document.getElementById('f-saldo').value;
+  const saldoReal = saldoStr !== '' ? parseFloat(saldoStr) : null;
+  const loc1  = document.getElementById('f-loc1').value.trim();
+  const loc2  = document.getElementById('f-loc2').value.trim();
+  const loc3  = document.getElementById('f-loc3').value.trim();
+  const loc4  = document.getElementById('f-loc4').value.trim();
+  const ativ1 = document.getElementById('f-ativ1').value.trim();
+  const ativ2 = document.getElementById('f-ativ2').value.trim();
+  const ativ3 = document.getElementById('f-ativ3').value.trim();
+  const ativ4 = document.getElementById('f-ativ4').value.trim();
+
+  if (!mes) return toast('Selecione o mês de referência.', true);
+  if (rf1 + fii + acao + rf2 === 0) return toast('Informe ao menos um valor.', true);
+
+  const existe = aportes.find(a => a.mes === mes);
+  if (existe) {
+    if (!confirm(`Já existe um aporte em ${formatMes(mes)}. Deseja substituir?`)) return;
+    await deletar(existe.id, false);
+  }
+
+  loader(true);
+  try {
+    const { error } = await db.from(TABLE).insert({
+      mes, rf_inflacao: rf1, fiis: fii, acoes: acao, rf_pos: rf2,
+      total: rf1 + fii + acao + rf2, obs, saldo_real: saldoReal,
+      local_rf1: loc1, local_fii: loc2, local_acao: loc3, local_rf2: loc4,
+      ativo_rf1: ativ1, ativo_fii: ativ2, ativo_acao: ativ3, ativo_rf2: ativ4
+    });
+    if (error) throw error;
+    toast('Aporte registrado!');
+    limparForm();
+    await carregar();
+  } catch(e) {
+    toast('Erro ao salvar.', true);
+    console.error(e);
+  } finally { loader(false); }
+}
+
+async function deletar(id, confirmar = true) {
+  if (confirmar && !confirm('Remover este aporte?')) return;
+  loader(true);
+  try {
+    const { error } = await db.from(TABLE).delete().eq('id', id);
+    if (error) throw error;
+    if (confirmar) toast('Aporte removido.');
+    await carregar();
+  } catch(e) {
+    toast('Erro ao remover.', true);
+  } finally { loader(false); }
+}
+
+function renderAll() {
+  const r1 = aportes.reduce((s,a) => s + (a.rf_inflacao||0), 0);
+  const r2 = aportes.reduce((s,a) => s + (a.fiis||0), 0);
+  const r3 = aportes.reduce((s,a) => s + (a.acoes||0), 0);
+  const r4 = aportes.reduce((s,a) => s + (a.rf_pos||0), 0);
+  const totalAportes = r1 + r2 + r3 + r4;
+
+  // Usa o saldo_real do mês mais recente que tiver esse campo preenchido
+  const ultimoComSaldo = [...aportes].reverse().find(a => a.saldo_real != null);
+  const pat = ultimoComSaldo ? ultimoComSaldo.saldo_real : RESERVA + totalAportes;
+  const usandoSaldoReal = !!ultimoComSaldo;
+
+  const pct = Math.min((pat / META) * 100, 100);
+
+  document.getElementById('hdr-anos').textContent        = ANO_META - new Date().getFullYear();
+  document.getElementById('total-patrimonio').textContent = fmt(pat);
+  document.getElementById('h-renda').textContent          = fmt(pat * 0.10 / 12);
+  document.getElementById('progress-fill').style.width    = pct.toFixed(1) + '%';
+  document.getElementById('p-pct').textContent            = pct.toFixed(1) + '%';
+  document.getElementById('p-falta').textContent          = `Faltam ${fmt(Math.max(META - pat, 0))}`;
+  document.getElementById('m-aportado').textContent       = fmt(totalAportes);
+  document.getElementById('m-meses').textContent          = aportes.length;
+  document.getElementById('a1-acc').textContent           = `Total: ${fmt(r1)}`;
+  document.getElementById('a2-acc').textContent           = `Total: ${fmt(r2)}`;
+  document.getElementById('a3-acc').textContent           = `Total: ${fmt(r3)}`;
+  document.getElementById('a4-acc').textContent           = `Total: ${fmt(r4)}`;
+
+  // Indicador visual no hero: diz se patrimônio é real ou estimado
+  const badge = document.getElementById('pat-badge');
+  if (badge) {
+    badge.textContent = usandoSaldoReal
+      ? `✓ saldo real de ${formatMes(ultimoComSaldo.mes)}`
+      : '~ estimado (sem saldo real)';
+    badge.className = usandoSaldoReal ? 'pat-badge real' : 'pat-badge est';
+  }
+
+  renderChart();
+  renderHistory();
+}
+
+function renderChart() {
+  // ── 1. Passado real: mês a mês a partir dos aportes ──────────────────────
+  const APORTE_MENSAL = 5000;
+  const TAXA_MENSAL   = Math.pow(1 + 0.06, 1/12) - 1; // 6% a.a. real p/ projeção
+
+  // Constrói série real acumulada
+  // Usa saldo_real quando disponível; caso contrário acumula aportes
+  let pat = RESERVA;
+  const realSeries = [];        // { mes, val, isReal }
+  aportes.forEach(a => {
+    pat += (a.total || 0);
+    const val = (a.saldo_real != null) ? a.saldo_real : pat;
+    if (a.saldo_real != null) pat = a.saldo_real; // ancora próximo mês no saldo real
+    realSeries.push({ mes: a.mes, val, isReal: a.saldo_real != null });
+  });
+
+  // ── 2. Projeção a partir do último ponto até ANO_META/12 ─────────────────
+  const hoje = new Date();
+  // Ponto de partida da projeção
+  let projPat   = realSeries.length ? realSeries[realSeries.length - 1].val : RESERVA;
+  let projStart;
+  if (realSeries.length) {
+    const last = realSeries[realSeries.length - 1].mes; // "YYYY-MM"
+    const [ly, lm] = last.split('-').map(Number);
+    projStart = new Date(ly, lm, 1); // primeiro dia do mês seguinte
+  } else {
+    projStart = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+  }
+
+  const projFim  = new Date(ANO_META, 11, 1); // Dez/2036
+  const projSeries = [];
+  let cur = new Date(projStart);
+  while (cur <= projFim) {
+    projPat = projPat * (1 + TAXA_MENSAL) + APORTE_MENSAL;
+    projSeries.push({
+      mes: `${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}`,
+      val: projPat
+    });
+    cur.setMonth(cur.getMonth() + 1);
+  }
+
+  // ── 3. Monta labels unificados ───────────────────────────────────────────
+  // Filtramos a projeção para mostrar apenas alguns pontos (trimestral) p/ não poluir
+  const projFiltrada = projSeries.filter((_, i) => i % 3 === 0);
+
+  // Ponto de junção: último real aparece também no início da projeção
+  const juncaoMes = realSeries.length ? realSeries[realSeries.length - 1].mes : null;
+  const juncaoVal = realSeries.length ? realSeries[realSeries.length - 1].val : RESERVA;
+
+  const allLabels = [
+    ...realSeries.map(d => formatMes(d.mes)),
+    ...projFiltrada.map(d => formatMes(d.mes))
+  ];
+
+  const nReal = realSeries.length;
+  const nProj = projFiltrada.length;
+  const total = nReal + nProj;
+
+  // Dataset real: valores só nas posições reais, null no resto
+  const dataReal = [
+    ...realSeries.map(d => d.val),
+    ...Array(nProj).fill(null)
+  ];
+
+  // Dataset projeção: null nas posições reais (exceto último), depois projeção
+  const dataProj = [
+    ...Array(Math.max(0, nReal - 1)).fill(null),
+    // ponto de junção
+    nReal > 0 ? juncaoVal : RESERVA,
+    ...projFiltrada.map(d => d.val)
+  ];
+
+  // Dataset meta: linha horizontal em todos os pontos
+  const dataMeta = Array(total).fill(META);
+
+  // ── 4. Plugin: label "Meta ✓" e "Você está aqui" ─────────────────────────
+  const annotPlugin = {
+    id: 'annot',
+    afterDraw(ch) {
+      if (!ch.scales.y || !ch.scales.x) return;
+      const c2 = ch.ctx;
+      const { top, bottom, left, right } = ch.chartArea;
+
+      // Label Meta
+      const yMeta = ch.scales.y.getPixelForValue(META);
+      c2.save();
+      c2.font = '600 11px JetBrains Mono, monospace';
+      c2.fillStyle = '#4ecdc4';
+      c2.textAlign = 'right';
+      c2.fillText('▶ Meta R$ 1,1M', right - 8, yMeta - 8);
+      c2.restore();
+
+      // Linha vertical separando real x projeção
+      if (nReal > 0 && nProj > 0) {
+        const xDiv = ch.scales.x.getPixelForValue(nReal - 1);
+        c2.save();
+        c2.setLineDash([3, 4]);
+        c2.strokeStyle = 'rgba(255,255,255,0.1)';
+        c2.lineWidth = 1;
+        c2.beginPath();
+        c2.moveTo(xDiv, top);
+        c2.lineTo(xDiv, bottom);
+        c2.stroke();
+        c2.setLineDash([]);
+        // label
+        c2.font = '500 9px JetBrains Mono, monospace';
+        c2.fillStyle = 'rgba(255,255,255,0.2)';
+        c2.textAlign = 'center';
+        c2.fillText('HOJE', xDiv, top + 10);
+        c2.restore();
+      }
+    }
+  };
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(document.getElementById('chart').getContext('2d'), {
+    type: 'line',
+    plugins: [annotPlugin],
+    data: {
+      labels: allLabels,
+      datasets: [
+        // Real
+        {
+          label: 'Real',
+          data: dataReal,
+          borderColor: '#d4a843',
+          backgroundColor: ctx => {
+            const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.height);
+            g.addColorStop(0, 'rgba(212,168,67,0.3)');
+            g.addColorStop(1, 'rgba(212,168,67,0.01)');
+            return g;
+          },
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2.5,
+          pointRadius: ctx => ctx.dataIndex < nReal ? 5 : 0,
+          pointBackgroundColor: '#d4a843',
+          pointBorderColor: '#0a0c10',
+          pointBorderWidth: 2,
+          pointHoverRadius: 7,
+          spanGaps: false,
+        },
+        // Projeção
+        {
+          label: 'Projeção',
+          data: dataProj,
+          borderColor: 'rgba(212,168,67,0.4)',
+          backgroundColor: 'rgba(212,168,67,0.04)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 1.5,
+          borderDash: [5, 4],
+          pointRadius: ctx => ctx.dataIndex === nReal - 1 ? 0 : 3,
+          pointBackgroundColor: 'rgba(212,168,67,0.5)',
+          pointBorderColor: '#0a0c10',
+          pointBorderWidth: 1.5,
+          pointHoverRadius: 5,
+          spanGaps: false,
+        },
+        // Meta
+        {
+          label: 'Meta',
+          data: dataMeta,
+          borderColor: 'rgba(78,205,196,0.6)',
+          borderWidth: 1.5,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          fill: false,
+          tension: 0,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a1f2e',
+          borderColor: 'rgba(255,255,255,0.08)',
+          borderWidth: 1,
+          titleColor: '#8a8880',
+          bodyColor: '#e8e6e0',
+          padding: 14,
+          callbacks: {
+            title: items => {
+              const i = items[0].dataIndex;
+              return (i < nReal ? '📍 ' : '🔮 ') + items[0].label;
+            },
+            label: c => {
+              if (c.raw === null) return null;
+              if (c.datasetIndex === 2) return null; // esconde meta no tooltip
+              const label = c.datasetIndex === 0 ? 'Real' : 'Projeção';
+              return ` ${label}: ${fmt(c.raw)}`;
+            },
+            afterBody: items => {
+              const val = items.find(i => i.raw !== null && i.datasetIndex < 2)?.raw;
+              if (!val) return [];
+              const falta = META - val;
+              const pct   = Math.min((val / META) * 100, 100).toFixed(1);
+              return falta > 0
+                ? [``, ` ${pct}% da meta`, ` Faltam ${fmt(falta)}`]
+                : [``, ` ✓ Meta atingida!`];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.03)' },
+          ticks: {
+            color: '#8a8880',
+            font: { family: 'JetBrains Mono', size: 10 },
+            maxTicksLimit: 14,
+            maxRotation: 40,
+          }
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: {
+            color: '#8a8880',
+            font: { family: 'JetBrains Mono', size: 10 },
+            callback: v => 'R$ ' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v)
+          },
+          min: 0,
+          suggestedMax: META * 1.08
+        }
+      }
+    }
+  });
+}
+
+function renderHistory() {
+  const el = document.getElementById('history-content');
+  if (!aportes.length) {
+    el.innerHTML = `<div class="empty"><span class="empty-icon">📊</span><p>Nenhum aporte registrado ainda.<br>Comece pelo formulário acima.</p></div>`;
+    return;
+  }
+  const loc   = v => v ? `<span class="loc-tag">${v}</span>` : '';
+  const ativo = v => v ? `<span class="ativo-tag">${v}</span>` : '';
+  const rows = [...aportes].reverse().map(a => `
+    <tr>
+      <td style="font-weight:700;white-space:nowrap">${formatMes(a.mes)}</td>
+      <td><span class="badge c1"><span class="badge-dot"></span>${fmt(a.rf_inflacao||0)}</span>${ativo(a.ativo_rf1)}${loc(a.local_rf1)}</td>
+      <td><span class="badge c2"><span class="badge-dot"></span>${fmt(a.fiis||0)}</span>${ativo(a.ativo_fii)}${loc(a.local_fii)}</td>
+      <td><span class="badge c3"><span class="badge-dot"></span>${fmt(a.acoes||0)}</span>${ativo(a.ativo_acao)}${loc(a.local_acao)}</td>
+      <td><span class="badge c4"><span class="badge-dot"></span>${fmt(a.rf_pos||0)}</span>${ativo(a.ativo_rf2)}${loc(a.local_rf2)}</td>
+      <td style="font-weight:700;color:var(--gold2)">${fmt(a.total||0)}</td>
+      <td>${a.saldo_real != null ? `<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--teal);font-weight:600">${fmt(a.saldo_real)}</span>` : '<span style="color:var(--sub);font-size:11px">—</span>'}</td>
+      <td style="color:var(--sub);font-size:11px;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.obs||'—'}</td>
+      <td><button class="btn-del" onclick="deletar('${a.id}')" title="Remover">✕</button></td>
+    </tr>`).join('');
+  el.innerHTML = `<div style="overflow-x:auto"><table>
+    <thead><tr><th>Mês</th><th>RF Inflação</th><th>FIIs</th><th>Ações</th><th>RF Pós</th><th>Aportado</th><th>Saldo Real</th><th>Obs.</th><th></th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+function fmt(v) { return 'R$ '+(v||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function formatMes(m) { if(!m)return''; const[y,mo]=m.split('-'); return ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][parseInt(mo)-1]+'/'+y; }
+function limparForm() { ['f-rf1','f-fii','f-acao','f-rf2','f-obs','f-saldo','f-loc1','f-loc2','f-loc3','f-loc4','f-ativ1','f-ativ2','f-ativ3','f-ativ4'].forEach(id=>document.getElementById(id).value=''); setMesAtual(); }
+function loader(s) { document.getElementById('loader').classList.toggle('show',s); }
+function toast(msg,err=false) { const el=document.getElementById('toast'); el.textContent=msg; el.className='toast'+(err?' err':''); void el.offsetWidth; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),3200); }
+</script>
+
+<!--
+══════════════════════════════════════════════════════════════
+  SQL — RODAR NO SUPABASE SQL EDITOR ANTES DE USAR
+══════════════════════════════════════════════════════════════
+
+create table aportes (
+  id          uuid primary key default gen_random_uuid(),
+  mes         text not null,
+  rf_inflacao numeric default 0,
+  fiis        numeric default 0,
+  acoes       numeric default 0,
+  rf_pos      numeric default 0,
+  total       numeric default 0,
+  obs         text,
+  local_rf1   text,
+  local_fii   text,
+  local_acao  text,
+  local_rf2   text,
+  ativo_rf1   text,
+  ativo_fii   text,
+  ativo_acao  text,
+  ativo_rf2   text,
+  created_at  timestamptz default now()
+);
+
+alter table aportes enable row level security;
+
+create policy "acesso publico" on aportes
+  for all using (true) with check (true);
+
+══════════════════════════════════════════════════════════════
+-->
+</body>
+</html>
