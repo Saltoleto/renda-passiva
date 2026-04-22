@@ -954,38 +954,5 @@ function limparForm() { ['f-rf1','f-fii','f-acao','f-rf2','f-obs','f-saldo','f-l
 function loader(s) { document.getElementById('loader').classList.toggle('show',s); }
 function toast(msg,err=false) { const el=document.getElementById('toast'); el.textContent=msg; el.className='toast'+(err?' err':''); void el.offsetWidth; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),3200); }
 </script>
-
-<!--
-══════════════════════════════════════════════════════════════
-  SQL — RODAR NO SUPABASE SQL EDITOR ANTES DE USAR
-══════════════════════════════════════════════════════════════
-
-create table aportes (
-  id          uuid primary key default gen_random_uuid(),
-  mes         text not null,
-  rf_inflacao numeric default 0,
-  fiis        numeric default 0,
-  acoes       numeric default 0,
-  rf_pos      numeric default 0,
-  total       numeric default 0,
-  obs         text,
-  local_rf1   text,
-  local_fii   text,
-  local_acao  text,
-  local_rf2   text,
-  ativo_rf1   text,
-  ativo_fii   text,
-  ativo_acao  text,
-  ativo_rf2   text,
-  created_at  timestamptz default now()
-);
-
-alter table aportes enable row level security;
-
-create policy "acesso publico" on aportes
-  for all using (true) with check (true);
-
-══════════════════════════════════════════════════════════════
--->
 </body>
 </html>
