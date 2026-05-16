@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>VG · Carteira</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0c10;--s1:#111318;--s2:#181c22;--s3:#1e232b;
+  --b:rgba(255,255,255,.07);--b2:rgba(255,255,255,.13);
+  --t:#f0f2f5;--t2:#8c939e;--t3:#4e5663;
+  --or:#f97316;--or2:#fb923c;--ord:rgba(249,115,22,.13);
+  --bl:#3b82f6;--bld:rgba(59,130,246,.13);
+  --pu:#a78bfa;--pud:rgba(167,139,250,.13);
+  --gr:#34d399;--grd:rgba(52,211,153,.13);
+  --am:#fbbf24;--amd:rgba(251,191,36,.13);
+  --re:#f87171;
+  --r:12px;--rs:8px;--rx:5px;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:50;background:rgba(10,12,16,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 1rem;height:52px}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.02em;color:var(--t)}
+.logo b{color:var(--or);font-weight:800}
+.pill{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:100px;background:var(--ord);color:var(--or);border:1px solid rgba(249,115,22,.22);white-space:nowrap}
+
+/* LAYOUT */
+main{padding:1.1rem 1rem 5rem;max-width:1100px;margin:0 auto}
+
+/* HERO */
+.hero{margin-bottom:1.25rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;color:var(--or);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.025em;line-height:1.15;margin-bottom:7px}
+.hero h1 em{font-style:normal;color:var(--or)}
+.hero p{font-size:12px;color:var(--t2);line-height:1.55}
+
+/* KPI STRIP — 2 col mobile */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.1rem}
+.kpi{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:.8rem .9rem}
+.kpi-lbl{font-family:'DM Mono',monospace;font-size:8.5px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.kpi-val{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.02em;line-height:1.1;color:var(--t)}
+.kpi-val.or{color:var(--or)}.kpi-val.gr{color:var(--gr)}
+.kpi-sub{font-size:10px;color:var(--t3);margin-top:3px;line-height:1.4}
+
+/* TABS — full width grid */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;background:var(--s1);border:1px solid var(--b);border-radius:var(--rs);padding:3px;margin-bottom:1.1rem;width:100%}
+.tab{font-family:'Inter',sans-serif;font-size:11.5px;font-weight:500;padding:9px 2px;border:none;background:transparent;color:var(--t2);cursor:pointer;border-radius:var(--rx);text-align:center;min-height:40px;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.tab.on{background:var(--or);color:#fff;font-weight:700}
+
+/* CARD */
+.card{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:1rem;margin-bottom:.75rem}
+.card-ttl{font-family:'Syne',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t2);margin-bottom:.9rem;display:flex;align-items:center;gap:7px;line-height:1.4}
+.card-ttl::before{content:'';width:3px;min-height:13px;background:var(--or);border-radius:2px;flex-shrink:0;align-self:stretch}
+
+/* MINI KPIS — 2 col mobile */
+.mkpis{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:.9rem}
+.mk{background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);padding:.7rem .8rem}
+.mk-lbl{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;line-height:1.3}
+.mk-val{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;line-height:1.2;color:var(--t)}
+.mk-val.ok{color:var(--gr)}.mk-val.warn{color:var(--am)}
+
+/* PROGRESS */
+.prog-wrap{margin-top:.65rem}
+.prog-lbl{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:var(--t3);margin-bottom:4px}
+.prog-track{height:4px;background:var(--s3);border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--or),var(--or2));transition:width 1.1s ease}
+
+/* CHART */
+.ch-wrap{position:relative;width:100%}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.leg{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--t2)}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* ATIVO CARDS — 2 col mobile */
+.ativo-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:.75rem}
+.ac{background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);padding:.75rem .85rem;position:relative;overflow:hidden}
+.ac-bar{position:absolute;top:0;left:0;width:3px;height:100%;border-radius:3px 0 0 3px}
+.ac-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ac-nm{font-size:11.5px;font-weight:600;color:var(--t);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac-st{font-size:10px;color:var(--t3);margin-bottom:8px}
+.ac-vl{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--t);line-height:1}
+.ac-vl span{font-family:'DM Mono',monospace;font-size:9px;color:var(--t3);font-weight:400}
+.ac-pc{font-family:'DM Mono',monospace;font-size:9px;color:var(--t3)}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1rem;padding:0 1rem}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:420px}
+thead th{font-family:'DM Mono',monospace;font-size:8.5px;font-weight:500;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;padding:6px 8px;text-align:left;border-bottom:1px solid var(--b);white-space:nowrap}
+tbody td{padding:9px 8px;border-bottom:1px solid var(--b);vertical-align:middle;color:var(--t)}
+tbody tr:last-child td{border-bottom:none}
+tfoot td{padding:8px 8px}
+
+/* CHIPS */
+.tk{font-family:'DM Mono',monospace;font-size:10.5px;background:var(--s3);border:1px solid var(--b);color:var(--t);padding:2px 6px;border-radius:4px;white-space:nowrap;display:inline-block}
+.bx{font-family:'DM Mono',monospace;font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:100px;white-space:nowrap;letter-spacing:.02em;display:inline-block}
+.bx-buy{background:var(--grd);color:var(--gr);border:1px solid rgba(52,211,153,.22)}
+.bx-aa{background:var(--bld);color:var(--bl);border:1px solid rgba(59,130,246,.22)}
+.bx-aaa{background:var(--grd);color:var(--gr);border:1px solid rgba(52,211,153,.22)}
+.bx-a{background:var(--pud);color:var(--pu);border:1px solid rgba(167,139,250,.22)}
+.bx-fii{background:var(--bld);color:var(--bl);border:1px solid rgba(59,130,246,.22)}
+.bx-acao{background:var(--pud);color:var(--pu);border:1px solid rgba(167,139,250,.22)}
+.bx-neu{background:var(--amd);color:var(--am);border:1px solid rgba(251,191,36,.22)}
+.dy{color:var(--gr);font-family:'DM Mono',monospace;font-weight:600}
+.al{color:var(--or);font-family:'DM Mono',monospace;font-weight:600}
+.rs{font-family:'DM Mono',monospace;font-weight:700;color:var(--t)}
+
+/* TABLE SUBTOTAIS */
+.sub-fii{background:rgba(59,130,246,.06)}
+.sub-acao{background:rgba(167,139,250,.06)}
+.sub-total{background:var(--ord)}
+.sub-lbl{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+
+/* PREMISSAS */
+.prem-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b);font-size:12.5px}
+.prem-row:last-child{border-bottom:none}
+.prem-k{color:var(--t2)}.prem-v{font-family:'DM Mono',monospace;font-weight:500;color:var(--t)}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:.9rem}
+
+/* DONUT */
+.donut-wrap{display:flex;flex-direction:column;gap:1rem}
+.donut-canvas{max-width:180px;margin:0 auto}
+.dl-item{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.dl-item:last-child{margin-bottom:0}
+.dl-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.dl-label{font-size:12.5px;font-weight:600;color:var(--t)}
+.dl-sub{font-size:10px;color:var(--t3)}
+
+/* ALLOC RACIONAL */
+.alloc-item{display:flex;gap:11px;align-items:flex-start;padding:10px 11px;background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);margin-bottom:8px}
+.alloc-item:last-child{margin-bottom:0}
+.alloc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.alloc-ttl{font-size:12.5px;font-weight:600;color:var(--t);margin-bottom:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.alloc-desc{font-size:11.5px;color:var(--t2);line-height:1.5}
+
+/* RESERVA */
+.rev-row{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;padding:8px 10px;background:var(--s2);border-radius:var(--rx);margin-bottom:7px}
+.rev-row:last-child{margin-bottom:0}
+.rev-k{color:var(--t2)}.rev-v{font-family:'DM Mono',monospace;font-weight:700}
+
+/* INFO / AVISO */
+.info{background:var(--bld);border:1px solid rgba(59,130,246,.22);border-radius:var(--rs);padding:9px 11px;font-size:11.5px;color:var(--t2);display:flex;gap:7px;align-items:flex-start;margin-top:.9rem;line-height:1.5}
+.aviso{background:var(--amd);border:1px solid rgba(251,191,36,.22);border-radius:var(--rs);padding:9px 11px;font-size:11.5px;color:var(--t2);display:flex;gap:7px;align-items:flex-start;margin-top:.9rem;line-height:1.5}
+.info svg,.aviso svg{flex-shrink:0;margin-top:1px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--b);padding:1rem;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:3px}
+.ft{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--t3);line-height:1.5}
+
+/* ANIMAÇÃO */
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.u{animation:up .35s ease both}
+.u1{animation-delay:.04s}.u2{animation-delay:.08s}.u3{animation-delay:.12s}.u4{animation-delay:.16s}.u5{animation-delay:.20s}
+
+/* TABLET 620px */
+@media(min-width:620px){
+  main{padding:1.5rem 1.25rem 4rem}
+  header{padding:0 1.25rem}
+  .hero h1{font-size:28px}
+  .kpi-val{font-size:20px}
+  .ativo-grid{grid-template-columns:repeat(3,1fr)}
+  .donut-wrap{flex-direction:row;align-items:center}
+  .donut-canvas{max-width:160px;margin:0}
+}
+
+/* DESKTOP 900px */
+@media(min-width:900px){
+  main{padding:2rem 2rem 4rem}
+  header{padding:0 2rem;height:58px}
+  .logo{font-size:18px}
+  .pill{font-size:10px}
+  .hero h1{font-size:34px}
+  .kpis{grid-template-columns:repeat(4,1fr);gap:10px}
+  .kpi-val{font-size:21px}
+  .tab{font-size:13px}
+  .card{padding:1.35rem}
+  .card-ttl{font-size:11px}
+  .mkpis{grid-template-columns:repeat(4,1fr);gap:10px}
+  .mk-val{font-size:16px}
+  table{min-width:unset;font-size:13px}
+  thead th{font-size:9.5px;padding:7px 10px}
+  tbody td{padding:10px 10px}
+  .ativo-grid{grid-template-columns:repeat(3,1fr)}
+  .donut-canvas{max-width:200px}
+  footer{flex-direction:row;justify-content:space-between;align-items:center;padding:1.25rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">VG<b>·</b>Carteira</div>
+  <div class="pill">Independência 10 anos</div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero u">
+    <p class="eyebrow">Plano VG VIP · Perfil moderado</p>
+    <h1>Carteira para <em>independência financeira</em> em 10 anos</h1>
+    <p>Baseada nas recomendações VG Research · Aportes mensais de R$ 5.000 · Capital inicial R$ 40.000 · Meta R$ 10.000/mês de renda passiva</p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi u u1">
+      <p class="kpi-lbl">Capital inicial</p>
+      <p class="kpi-val">R$ 40.000</p>
+      <p class="kpi-sub">Cofrinho Itaú → carteira</p>
+    </div>
+    <div class="kpi u u2">
+      <p class="kpi-lbl">Aporte mensal</p>
+      <p class="kpi-val">R$ 5.000</p>
+      <p class="kpi-sub">100% reinvestido até meta</p>
+    </div>
+    <div class="kpi u u3">
+      <p class="kpi-lbl">Renda-alvo</p>
+      <p class="kpi-val or">R$ 10.000<span style="font-size:13px">/mês</span></p>
+      <p class="kpi-sub">30% reinvestido na manutenção</p>
+    </div>
+    <div class="kpi u u4">
+      <p class="kpi-lbl">Patrimônio necessário</p>
+      <p class="kpi-val gr">R$ 1,2M</p>
+      <p class="kpi-sub">DY médio 10% a.a.</p>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs u u5">
+    <button class="tab on"  onclick="show('projecao',this)">Projeção</button>
+    <button class="tab"     onclick="show('fiis',this)">FIIs</button>
+    <button class="tab"     onclick="show('acoes',this)">Ações</button>
+    <button class="tab"     onclick="show('alocacao',this)">Alocação</button>
+  </div>
+
+  <!-- ══ PROJEÇÃO ══ -->
+  <div id="tab-projecao">
+    <div class="mkpis">
+      <div class="mk"><p class="mk-lbl">Patrimônio Ano 5</p><p class="mk-val" id="a5">—</p></div>
+      <div class="mk"><p class="mk-lbl">Patrimônio Ano 10</p><p class="mk-val ok" id="a10">—</p></div>
+      <div class="mk"><p class="mk-lbl">Renda mês Ano 10</p><p class="mk-val ok" id="r10">—</p></div>
+      <div class="mk"><p class="mk-lbl">Meta atingida?</p><p class="mk-val" id="ms">—</p></div>
+    </div>
+
+    <div class="card">
+      <p class="card-ttl">Evolução do patrimônio (10 anos)</p>
+      <div class="ch-wrap" style="height:230px"><canvas id="cPat"></canvas></div>
+      <div class="prog-wrap">
+        <div class="prog-lbl"><span>Progresso rumo à meta</span><span id="pp">—</span></div>
+        <div class="prog-track"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+      </div>
+      <div class="legend">
+        <span class="leg"><span class="leg-dot" style="background:var(--or)"></span>Patrimônio</span>
+        <span class="leg"><span class="leg-dot" style="background:var(--re)"></span>Meta R$ 1,2M</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-ttl">Renda passiva mensal projetada</p>
+      <div class="ch-wrap" style="height:190px"><canvas id="cRenda"></canvas></div>
+      <div class="legend">
+        <span class="leg"><span class="leg-dot" style="background:var(--gr)"></span>Renda estimada</span>
+        <span class="leg"><span class="leg-dot" style="background:rgba(248,113,113,.5)"></span>Meta R$ 10.000</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-ttl">Premissas da simulação</p>
+      <div class="prem-row"><span class="prem-k">DY médio FIIs</span><span class="prem-v">10% a.a.</span></div>
+      <div class="prem-row"><span class="prem-k">DY médio ações</span><span class="prem-v">7% a.a.</span></div>
+      <div class="prem-row"><span class="prem-k">Valorização FIIs</span><span class="prem-v">4% a.a.</span></div>
+      <div class="prem-row"><span class="prem-k">Valorização ações</span><span class="prem-v">8% a.a.</span></div>
+      <div class="prem-row"><span class="prem-k">Alocação FIIs / Ações</span><span class="prem-v">60% / 40%</span></div>
+      <div class="prem-row"><span class="prem-k">Retorno total estimado</span><span class="prem-v" style="color:var(--or)">~13,6% a.a.</span></div>
+      <div class="prem-row"><span class="prem-k">Reinvestimento (acumulação)</span><span class="prem-v">100%</span></div>
+      <div class="aviso">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--am)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Projeção estimativa. Retornos reais variam. Não constitui recomendação de investimento.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FIIs ══ -->
+  <div id="tab-fiis" style="display:none">
+    <div class="card">
+      <p class="card-ttl">Aporte mensal em FIIs — R$ 3.000 de R$ 5.000</p>
+      <div class="ativo-grid" id="fii-cards"></div>
+    </div>
+    <div class="card">
+      <div class="sec-hdr">
+        <p class="card-ttl" style="margin-bottom:0">Fundos imobiliários</p>
+        <span class="bx bx-fii">60% · R$ 3.000/mês</span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Ticker</th><th>Fundo</th><th>Setor</th><th>DY</th><th>Risco</th><th>Status</th><th>%</th><th>R$/mês</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tk">GGRC11</span></td><td><b>GGR Covepi</b></td><td style="color:var(--t2)">Logística</td><td class="dy">12,1%</td><td><span class="bx bx-aa">AA</span></td><td><span class="bx bx-buy">Compra</span></td><td class="al">10%</td><td class="rs">R$ 500</td></tr>
+            <tr><td><span class="tk">BTLG11</span></td><td><b>BTG Log.</b></td><td style="color:var(--t2)">Logística</td><td class="dy">9,3%</td><td><span class="bx bx-aaa">AAA</span></td><td><span class="bx bx-buy">Compra</span></td><td class="al">10%</td><td class="rs">R$ 500</td></tr>
+            <tr><td><span class="tk">KNHF11</span></td><td><b>Kinea HF</b></td><td style="color:var(--t2)">Híbrido</td><td class="dy">12,4%</td><td><span class="bx bx-aa">AA</span></td><td><span class="bx bx-buy">Compra</span></td><td class="al">10%</td><td class="rs">R$ 500</td></tr>
+            <tr><td><span class="tk">XPML11</span></td><td><b>XP Malls</b></td><td style="color:var(--t2)">Shopping</td><td class="dy">10,2%</td><td><span class="bx bx-aa">AA</span></td><td><span class="bx bx-buy">Compra</span></td><td class="al">10%</td><td class="rs">R$ 500</td></tr>
+            <tr><td><span class="tk">CSHU11</span></td><td><b>CSHG Urbana</b></td><td style="color:var(--t2)">Varejo</td><td class="dy">7,6%</td><td><span class="bx bx-aaa">AAA</span></td><td><span class="bx bx-buy">Compra</span></td><td class="al">10%</td><td class="rs">R$ 500</td></tr>
+            <tr><td><span class="tk">HGBS11</span></td><td><b>HG Shopping</b></td><td style="color:var(--t2)">Shopping</td><td class="dy">9,6%</td><td><span class="bx bx-aa">AA</span></td><td><span class="bx bx-buy">Compra</span></td><td class="al">10%</td><td class="rs">R$ 500</td></tr>
+          </tbody>
+          <tfoot><tr style="background:var(--ord)">
+            <td colspan="6" class="sub-lbl" style="color:var(--or)">Total FIIs</td>
+            <td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--or)">60%</td>
+            <td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--or)">R$ 3.000</td>
+          </tr></tfoot>
+        </table>
+      </div>
+      <div class="info">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--bl)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        FIIs pagam dividendos mensais isentos de IR. Valide os preços-teto vigentes com a VG Research antes de aportar.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ AÇÕES ══ -->
+  <div id="tab-acoes" style="display:none">
+    <div class="card">
+      <p class="card-ttl">Aporte mensal em Ações — R$ 2.000 de R$ 5.000</p>
+      <div class="ativo-grid" id="acao-cards"></div>
+    </div>
+    <div class="card">
+      <div class="sec-hdr">
+        <p class="card-ttl" style="margin-bottom:0">Ações recomendadas</p>
+        <span class="bx bx-acao">40% · R$ 2.000/mês</span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Ticker</th><th>Empresa</th><th>Setor</th><th>DY</th><th>Risco</th><th>Carteira</th><th>Status</th><th>%</th><th>R$/mês</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tk">BBSE3</span></td><td><b>BB Seguridade</b></td><td style="color:var(--t2)">Seguros</td><td class="dy">10,0%</td><td><span class="bx bx-a">A</span></td><td style="color:var(--t2)">Dividendos</td><td><span class="bx bx-buy">Compra</span></td><td class="al">8%</td><td class="rs">R$ 400</td></tr>
+            <tr><td><span class="tk">VALE3</span></td><td><b>Vale</b></td><td style="color:var(--t2)">Mineração</td><td class="dy">7,2%</td><td><span class="bx bx-a">A</span></td><td style="color:var(--t2)">Dividendos</td><td><span class="bx bx-buy">Compra</span></td><td class="al">8%</td><td class="rs">R$ 400</td></tr>
+            <tr><td><span class="tk">ITSA4</span></td><td><b>Itaúsa</b></td><td style="color:var(--t2)">Holding</td><td class="dy">5,0%</td><td><span class="bx bx-aaa">AAA</span></td><td style="color:var(--t2)">Dividendos</td><td><span class="bx bx-buy">Compra</span></td><td class="al">8%</td><td class="rs">R$ 400</td></tr>
+            <tr><td><span class="tk">BBAS3</span></td><td><b>Banco do Brasil</b></td><td style="color:var(--t2)">Bancos</td><td class="dy">10,0%</td><td><span class="bx bx-aaa">AAA</span></td><td style="color:var(--t2)">Dividendos</td><td><span class="bx bx-buy">Compra</span></td><td class="al">8%</td><td class="rs">R$ 400</td></tr>
+            <tr><td><span class="tk">ELET3</span></td><td><b>Eletrobras</b></td><td style="color:var(--t2)">Energia</td><td class="dy">5,0%</td><td><span class="bx bx-a">A</span></td><td style="color:var(--t2)">Valor</td><td><span class="bx bx-buy">Compra</span></td><td class="al">8%</td><td class="rs">R$ 400</td></tr>
+          </tbody>
+          <tfoot><tr style="background:var(--pud)">
+            <td colspan="7" class="sub-lbl" style="color:var(--pu)">Total Ações</td>
+            <td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--pu)">40%</td>
+            <td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--pu)">R$ 2.000</td>
+          </tr></tfoot>
+        </table>
+      </div>
+      <div class="info">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--bl)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Ações combinam dividendos com valorização de capital no longo prazo.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ALOCAÇÃO ══ -->
+  <div id="tab-alocacao" style="display:none">
+
+    <div class="card">
+      <p class="card-ttl">Onde vai cada real — R$ 5.000/mês</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Ticker</th><th>Ativo</th><th>Classe</th><th>%</th><th>R$/mês</th><th style="min-width:70px">Barra</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">01</td><td><span class="tk">GGRC11</span></td><td><b>GGR Covepi</b></td><td><span class="bx bx-fii">FII</span></td><td class="al">10%</td><td class="rs">R$ 500</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:100%;height:4px;background:#3b82f6;border-radius:3px"></div></div></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">02</td><td><span class="tk">BTLG11</span></td><td><b>BTG Pactual Log.</b></td><td><span class="bx bx-fii">FII</span></td><td class="al">10%</td><td class="rs">R$ 500</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:100%;height:4px;background:#60a5fa;border-radius:3px"></div></div></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">03</td><td><span class="tk">KNHF11</span></td><td><b>Kinea Hedge Fund</b></td><td><span class="bx bx-fii">FII</span></td><td class="al">10%</td><td class="rs">R$ 500</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:100%;height:4px;background:#818cf8;border-radius:3px"></div></div></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">04</td><td><span class="tk">XPML11</span></td><td><b>XP Malls</b></td><td><span class="bx bx-fii">FII</span></td><td class="al">10%</td><td class="rs">R$ 500</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:100%;height:4px;background:#a78bfa;border-radius:3px"></div></div></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">05</td><td><span class="tk">CSHU11</span></td><td><b>CSHG Renda Urbana</b></td><td><span class="bx bx-fii">FII</span></td><td class="al">10%</td><td class="rs">R$ 500</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:100%;height:4px;background:#c084fc;border-radius:3px"></div></div></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">06</td><td><span class="tk">HGBS11</span></td><td><b>Hedge Brasil Shopping</b></td><td><span class="bx bx-fii">FII</span></td><td class="al">10%</td><td class="rs">R$ 500</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:100%;height:4px;background:#e879f9;border-radius:3px"></div></div></td></tr>
+            <tr class="sub-fii"><td colspan="4" class="sub-lbl" style="color:var(--bl);padding:7px 8px">Subtotal FIIs</td><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--bl)">60%</td><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--bl)">R$ 3.000</td><td></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">07</td><td><span class="tk">BBSE3</span></td><td><b>BB Seguridade</b></td><td><span class="bx bx-acao">Ação</span></td><td class="al">8%</td><td class="rs">R$ 400</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:80%;height:4px;background:#34d399;border-radius:3px"></div></div></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">08</td><td><span class="tk">VALE3</span></td><td><b>Vale</b></td><td><span class="bx bx-acao">Ação</span></td><td class="al">8%</td><td class="rs">R$ 400</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:80%;height:4px;background:#2dd4bf;border-radius:3px"></div></div></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">09</td><td><span class="tk">ITSA4</span></td><td><b>Itaúsa</b></td><td><span class="bx bx-acao">Ação</span></td><td class="al">8%</td><td class="rs">R$ 400</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:80%;height:4px;background:#4ade80;border-radius:3px"></div></div></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">10</td><td><span class="tk">BBAS3</span></td><td><b>Banco do Brasil</b></td><td><span class="bx bx-acao">Ação</span></td><td class="al">8%</td><td class="rs">R$ 400</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:80%;height:4px;background:#a3e635;border-radius:3px"></div></div></td></tr>
+            <tr><td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:9px">11</td><td><span class="tk">ELET3</span></td><td><b>Eletrobras</b></td><td><span class="bx bx-acao">Ação</span></td><td class="al">8%</td><td class="rs">R$ 400</td><td><div style="height:4px;background:var(--s3);border-radius:3px"><div style="width:80%;height:4px;background:#facc15;border-radius:3px"></div></div></td></tr>
+            <tr class="sub-acao"><td colspan="4" class="sub-lbl" style="color:var(--pu);padding:7px 8px">Subtotal Ações</td><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--pu)">40%</td><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--pu)">R$ 2.000</td><td></td></tr>
+          </tbody>
+          <tfoot><tr class="sub-total">
+            <td colspan="4" class="sub-lbl" style="color:var(--or);padding:9px 8px;font-size:10px">TOTAL APORTE MENSAL</td>
+            <td style="font-family:'DM Mono',monospace;font-weight:800;color:var(--or);font-size:13px">100%</td>
+            <td style="font-family:'DM Mono',monospace;font-weight:800;color:var(--or);font-size:13px">R$ 5.000</td>
+            <td></td>
+          </tr></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-ttl">Distribuição do aporte</p>
+      <div class="donut-wrap">
+        <div class="donut-canvas">
+          <div class="ch-wrap" style="height:160px"><canvas id="cDonut"></canvas></div>
+        </div>
+        <div>
+          <div class="dl-item"><div class="dl-dot" style="background:#3b82f6"></div><div><div class="dl-label">FIIs — 60%</div><div class="dl-sub">R$ 3.000/mês · 6 fundos</div></div></div>
+          <div class="dl-item"><div class="dl-dot" style="background:#a78bfa"></div><div><div class="dl-label">Ações Dividendos — 28%</div><div class="dl-sub">R$ 1.400/mês · 4 ações</div></div></div>
+          <div class="dl-item"><div class="dl-dot" style="background:#34d399"></div><div><div class="dl-label">Ações Valor — 8%</div><div class="dl-sub">R$ 400/mês · 1 ação</div></div></div>
+          <div class="dl-item"><div class="dl-dot" style="background:#fbbf24"></div><div><div class="dl-label">Small Caps — 4%</div><div class="dl-sub">R$ 200/mês (a adicionar)</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-ttl">Migração do cofrinho Itaú</p>
+      <div class="rev-row"><span class="rev-k">Reserva de emergência (manter)</span><span class="rev-v" style="color:var(--am)">R$ 15.000</span></div>
+      <div class="rev-row"><span class="rev-k">1º aporte na carteira</span><span class="rev-v" style="color:var(--gr)">R$ 25.000</span></div>
+      <div class="rev-row"><span class="rev-k">Aportes mensais seguintes</span><span class="rev-v" style="color:var(--or)">R$ 5.000/mês</span></div>
+    </div>
+
+    <div class="card">
+      <p class="card-ttl">Racional da alocação</p>
+      <div class="alloc-item">
+        <div class="alloc-dot" style="background:#3b82f6"></div>
+        <div><div class="alloc-ttl">60% FIIs <span class="bx bx-fii">Motor da renda</span></div><div class="alloc-desc">Dividendos mensais isentos de IR. DY médio ~10% a.a. garante fluxo constante para reinvestimento e juros compostos.</div></div>
+      </div>
+      <div class="alloc-item">
+        <div class="alloc-dot" style="background:#a78bfa"></div>
+        <div><div class="alloc-ttl">28% Ações Dividendos <span class="bx bx-acao">Crescimento</span></div><div class="alloc-desc">Empresas com alto DY e potencial de valorização. Complementam os FIIs com ganho de capital, acelerando o acúmulo patrimonial.</div></div>
+      </div>
+      <div class="alloc-item">
+        <div class="alloc-dot" style="background:#34d399"></div>
+        <div><div class="alloc-ttl">8% Ações Valor <span class="bx bx-neu">Acelerador</span></div><div class="alloc-desc">Líderes com desconto no valuation. Alinhado ao perfil moderado e à recomendação VG de 20% em valor.</div></div>
+      </div>
+      <div class="alloc-item">
+        <div class="alloc-dot" style="background:#fbbf24"></div>
+        <div><div class="alloc-ttl">4% Small Caps <span class="bx bx-neu">Exposição mínima</span></div><div class="alloc-desc">Captura crescimento agressivo sem comprometer estabilidade. Pode ser zerado se a volatilidade incomodar.</div></div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <p class="ft">Baseado em: VG Research — Plano VG VIP · Manual do Investidor</p>
+  <p class="ft">Não constitui recomendação de investimento · Consulte um assessor certificado</p>
+</footer>
+
+<script>
+/* CÁLCULOS */
+const CAP=40000,APO=5000,META=1200000;
+const DY_F=.10,VZ_F=.04,PC_F=.60,DY_A=.07,VZ_A=.08,PC_A=.40;
+const RM=((DY_F+VZ_F)/12)*PC_F+((DY_A+VZ_A)/12)*PC_A;
+const DM=(DY_F*PC_F+DY_A*PC_A)/12;
+const anos=[],pats=[],rends=[];
+let p=CAP;
+for(let m=1;m<=120;m++){
+  p=p*(1+RM)+APO;
+  if(m%12===0){anos.push('A'+m/12);pats.push(Math.round(p));rends.push(Math.round(p*DM));}
+}
+const fmt=v=>'R$ '+Math.round(v).toLocaleString('pt-BR');
+const pct=Math.min(100,Math.round(pats[9]/META*100));
+document.getElementById('a5').textContent=fmt(pats[4]);
+document.getElementById('a10').textContent=fmt(pats[9]);
+document.getElementById('r10').textContent=fmt(rends[9])+'/mês';
+const ms=document.getElementById('ms');
+if(pats[9]>=META){ms.textContent='✓ Sim';ms.className='mk-val ok';}
+else{ms.textContent=pct+'% da meta';ms.className='mk-val warn';}
+document.getElementById('pp').textContent=pct+'%';
+setTimeout(()=>document.getElementById('pf').style.width=pct+'%',300);
+
+/* CORES / CHART DEFAULTS */
+const OR='#f97316',RE='#f87171',GR='#34d399',BL='#3b82f6',PU='#a78bfa',AM='#fbbf24';
+const TC='#4e5663',GC='rgba(255,255,255,.05)';
+const sm=window.innerWidth<500;
+const tickFont={family:'DM Mono',size:sm?9:11};
+
+new Chart(document.getElementById('cPat'),{
+  type:'bar',
+  data:{labels:anos,datasets:[
+    {label:'Patrimônio',data:pats,backgroundColor:pats.map(v=>v>=META?'rgba(52,211,153,.7)':'rgba(249,115,22,.7)'),borderRadius:4,borderSkipped:false},
+    {label:'Meta',data:Array(10).fill(META),type:'line',borderColor:RE,borderWidth:1.5,borderDash:[5,4],pointRadius:0,fill:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}}},
+    scales:{
+      x:{ticks:{color:TC,font:tickFont,maxRotation:0},grid:{color:GC},border:{color:GC}},
+      y:{ticks:{color:TC,font:tickFont,callback:v=>'R$'+(v/1000).toFixed(0)+'k'},grid:{color:GC},border:{color:GC}}
+    }
+  }
+});
+
+new Chart(document.getElementById('cRenda'),{
+  type:'line',
+  data:{labels:anos,datasets:[
+    {label:'Renda',data:rends,borderColor:GR,backgroundColor:'rgba(52,211,153,.07)',borderWidth:2,pointRadius:sm?2:3,pointBackgroundColor:GR,fill:true,tension:.4},
+    {label:'Meta',data:Array(10).fill(10000),borderColor:'rgba(248,113,113,.5)',borderWidth:1.5,borderDash:[5,4],pointRadius:0,fill:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}}},
+    scales:{
+      x:{ticks:{color:TC,font:tickFont,maxRotation:0},grid:{color:GC},border:{color:GC}},
+      y:{ticks:{color:TC,font:tickFont,callback:v=>'R$'+(v/1000).toFixed(0)+'k'},grid:{color:GC},border:{color:GC}}
+    }
+  }
+});
+
+new Chart(document.getElementById('cDonut'),{
+  type:'doughnut',
+  data:{labels:['FIIs','Ações Div.','Ações Valor','Small Caps'],
+    datasets:[{data:[60,28,8,4],backgroundColor:[BL,PU,GR,AM],borderWidth:0,hoverOffset:5}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const v=['R$ 3.000','R$ 1.400','R$ 400','R$ 200'];return c.label+': '+c.raw+'% ('+v[c.dataIndex]+'/mês)'}}}}}
+});
+
+/* ATIVO CARDS */
+const fiis=[
+  {tk:'GGRC11',nm:'GGR Covepi',   st:'Logística',pc:10,vl:500,cor:'#3b82f6'},
+  {tk:'BTLG11',nm:'BTG Log.',     st:'Logística',pc:10,vl:500,cor:'#60a5fa'},
+  {tk:'KNHF11',nm:'Kinea HF',     st:'Híbrido',  pc:10,vl:500,cor:'#818cf8'},
+  {tk:'XPML11',nm:'XP Malls',     st:'Shopping', pc:10,vl:500,cor:'#a78bfa'},
+  {tk:'CSHU11',nm:'CSHG Urbana',  st:'Varejo',   pc:10,vl:500,cor:'#c084fc'},
+  {tk:'HGBS11',nm:'HG Shopping',  st:'Shopping', pc:10,vl:500,cor:'#e879f9'},
+];
+const acoes=[
+  {tk:'BBSE3',nm:'BB Seguridade', st:'Seguros',  pc:8,vl:400,cor:'#34d399'},
+  {tk:'VALE3',nm:'Vale',          st:'Mineração',pc:8,vl:400,cor:'#2dd4bf'},
+  {tk:'ITSA4',nm:'Itaúsa',        st:'Holding',  pc:8,vl:400,cor:'#4ade80'},
+  {tk:'BBAS3',nm:'Banco do Brasil',st:'Bancos', pc:8,vl:400,cor:'#a3e635'},
+  {tk:'ELET3',nm:'Eletrobras',    st:'Energia',  pc:8,vl:400,cor:'#facc15'},
+];
+function cards(id,arr){
+  document.getElementById(id).innerHTML=arr.map(a=>`
+    <div class="ac">
+      <div class="ac-bar" style="background:${a.cor}"></div>
+      <div class="ac-hdr">
+        <span style="font-family:'DM Mono',monospace;font-size:10.5px;background:var(--s3);border:1px solid var(--b);padding:2px 5px;border-radius:4px;color:var(--t)">${a.tk}</span>
+        <span class="ac-pc">${a.pc}%</span>
+      </div>
+      <div class="ac-nm">${a.nm}</div>
+      <div class="ac-st">${a.st}</div>
+      <div class="ac-vl">R$ ${a.vl.toLocaleString('pt-BR')}<span>/mês</span></div>
+    </div>`).join('');
+}
+cards('fii-cards',fiis);
+cards('acao-cards',acoes);
+
+/* TABS */
+function show(name,btn){
+  ['projecao','fiis','acoes','alocacao'].forEach(t=>
+    document.getElementById('tab-'+t).style.display=t===name?'block':'none');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+</script>
+</body>
+</html>
