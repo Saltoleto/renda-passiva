@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Carteira Fase 1 — Fundação (Anos 1–3)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#04080f;
+  --bg2:#070d1a;
+  --card:#0b1120;
+  --card2:#0e1628;
+  --card3:#111c33;
+  --border:rgba(100,140,255,0.10);
+  --border2:rgba(100,140,255,0.18);
+  --text:#dce8ff;
+  --muted:#6a82a8;
+  --faint:#2a3a5c;
+
+  --blue:#4f9eff;
+  --blue2:#7bb8ff;
+  --blue-glow:rgba(79,158,255,0.15);
+  --green:#2ecc8a;
+  --green-glow:rgba(46,204,138,0.13);
+  --amber:#f0b429;
+  --amber-glow:rgba(240,180,41,0.13);
+  --red:#ff5f72;
+  --red-glow:rgba(255,95,114,0.13);
+  --purple:#9b7fff;
+  --purple-glow:rgba(155,127,255,0.13);
+  --teal:#22d3c8;
+  --teal-glow:rgba(34,211,200,0.12);
+
+  --r:16px;--rs:10px;
+  --font:'Outfit',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+
+/* ─── NOISE / GRID TEXTURE ─── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(79,158,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(79,158,255,0.025) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+
+/* ─── HEADER ─── */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(4,8,15,0.88);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.5rem;height:52px;
+}
+.logo{font-family:var(--font);font-weight:800;font-size:15px;color:var(--text);letter-spacing:-.02em}
+.logo em{color:var(--blue);font-style:normal}
+.hbadge{
+  font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;
+  background:var(--green-glow);color:var(--green);border:1px solid rgba(46,204,138,0.22);
+}
+
+/* ─── MAIN ─── */
+main{position:relative;z-index:1;padding:1.5rem 1.5rem 6rem;max-width:1140px;margin:0 auto}
+
+/* ─── HERO ─── */
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#090f1e 0%,#0b1427 60%,#070c18 100%);
+  border:1px solid var(--border2);border-radius:24px;
+  padding:2rem;margin-bottom:1.25rem;
+}
+.hero::before{
+  content:'';position:absolute;top:-120px;right:-80px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(79,158,255,0.12),transparent 65%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-100px;left:-60px;
+  width:350px;height:350px;border-radius:50%;
+  background:radial-gradient(circle,rgba(46,204,138,0.07),transparent 65%);
+  pointer-events:none;
+}
+.eyebrow{
+  display:inline-block;
+  font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--blue2);background:var(--blue-glow);border:1px solid rgba(79,158,255,0.22);
+  padding:4px 10px;border-radius:100px;margin-bottom:14px;
+}
+.hero h1{
+  font-weight:900;font-size:clamp(24px,5vw,42px);
+  line-height:1.1;letter-spacing:-.03em;margin-bottom:10px;
+  background:linear-gradient(135deg,#dce8ff 0%,#7bb8ff 50%,#4f9eff 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:13px;color:var(--muted);max-width:620px;line-height:1.6;margin-bottom:1.5rem}
+
+/* ─── KPIs ─── */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.kpi{
+  background:rgba(255,255,255,0.025);border:1px solid var(--border);
+  border-radius:12px;padding:.9rem 1rem;
+}
+.kpi-l{font-family:var(--mono);font-size:8px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.kpi-v{font-weight:800;font-size:22px;line-height:1.1;letter-spacing:-.02em}
+.kpi-s{font-size:10px;color:var(--muted);margin-top:3px}
+.blue-v{color:var(--blue)}.green-v{color:var(--green)}.amber-v{color:var(--amber)}.teal-v{color:var(--teal)}
+
+/* ─── SECTION ─── */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;
+}
+.sec-ttl{
+  font-weight:800;font-size:15px;color:var(--blue2);
+  display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;
+  letter-spacing:-.01em;
+}
+.sec-ttl::before{
+  content:'';width:3px;height:18px;
+  background:linear-gradient(180deg,var(--blue),var(--teal));
+  border-radius:2px;flex-shrink:0;
+}
+
+/* ─── ALLOC BLOCKS ─── */
+.alloc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.alloc-card{
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:12px;padding:1rem;position:relative;overflow:hidden;
+}
+.alloc-glow{
+  position:absolute;top:-30px;right:-30px;width:100px;height:100px;
+  border-radius:50%;pointer-events:none;opacity:.6;
+}
+.alloc-pct{
+  font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;
+  margin-bottom:5px;letter-spacing:-.03em;
+}
+.alloc-name{font-weight:700;font-size:12px;margin-bottom:3px}
+.alloc-desc{font-size:10.5px;color:var(--muted);line-height:1.5}
+.alloc-bar{height:3px;border-radius:2px;margin-top:10px;opacity:.7}
+
+/* ─── PILULAS / BADGES ─── */
+.pil{
+  display:inline-block;font-family:var(--mono);font-size:7.5px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 7px;border-radius:100px;
+}
+.p-blue{background:var(--blue-glow);color:var(--blue);border:1px solid rgba(79,158,255,0.22)}
+.p-green{background:var(--green-glow);color:var(--green);border:1px solid rgba(46,204,138,0.22)}
+.p-amber{background:var(--amber-glow);color:var(--amber);border:1px solid rgba(240,180,41,0.22)}
+.p-purple{background:var(--purple-glow);color:var(--purple);border:1px solid rgba(155,127,255,0.22)}
+.p-teal{background:var(--teal-glow);color:var(--teal);border:1px solid rgba(34,211,200,0.22)}
+.p-red{background:var(--red-glow);color:var(--red);border:1px solid rgba(255,95,114,0.22)}
+
+/* ─── TABELA ─── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1.25rem;padding:0 1.25rem}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px}
+thead th{
+  background:var(--card3);
+  font-family:var(--mono);font-size:8px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--blue);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border2);
+  white-space:nowrap;
+}
+tbody td{padding:10px 10px;border-bottom:1px solid rgba(79,158,255,0.06);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(79,158,255,0.03)}
+tfoot td{padding:9px 10px;background:rgba(79,158,255,0.08);font-family:var(--mono);font-weight:700;color:var(--blue);font-size:11px}
+.tk{
+  font-family:var(--mono);font-size:11px;
+  background:var(--card3);border:1px solid var(--border);
+  padding:3px 7px;border-radius:6px;color:var(--text);
+}
+.num{font-family:var(--mono);font-weight:600}
+.hl{color:var(--green);font-family:var(--mono);font-weight:700}
+.wl{color:var(--amber);font-family:var(--mono);font-weight:700}
+.rl{color:var(--red);font-family:var(--mono);font-weight:700}
+.sub-row td{
+  background:rgba(79,158,255,0.06);
+  font-family:var(--mono);font-size:8.5px;font-weight:700;
+  color:var(--blue2);letter-spacing:.05em;text-transform:uppercase;
+  padding:6px 10px;
+}
+
+/* ─── ALERTAS ─── */
+.al{border-radius:10px;padding:.8rem 1rem;margin-top:.75rem;font-size:12px;line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+.al-ok{background:var(--green-glow);border:1px solid rgba(46,204,138,0.22);color:#a7f3d0}
+.al-warn{background:var(--amber-glow);border:1px solid rgba(240,180,41,0.22);color:#fde68a}
+.al-info{background:var(--blue-glow);border:1px solid rgba(79,158,255,0.22);color:#bae6fd}
+.al-err{background:var(--red-glow);border:1px solid rgba(255,95,114,0.22);color:#fecaca}
+.al b{font-weight:700}
+.al-icon{flex-shrink:0;margin-top:2px;font-size:13px}
+
+/* ─── PROJEÇÃO / PREMISSAS ─── */
+.pr-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.pr-row:last-child{border-bottom:none}
+.pr-k{color:var(--muted)}.pr-v{font-family:var(--mono);font-weight:500;color:var(--text)}
+
+/* ─── GRIDS ─── */
+.g2{display:grid;grid-template-columns:1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr;gap:10px}
+.info-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem}
+.info-card .ic-ttl{font-weight:700;font-size:11.5px;color:var(--blue2);margin-bottom:.4rem}
+.info-card p{font-size:11.5px;color:var(--muted);line-height:1.5}
+.info-card ul{padding-left:.9rem;margin-top:.3rem}
+.info-card li{font-size:11.5px;color:var(--muted);margin-bottom:3px;line-height:1.5}
+
+/* ─── REBAL TABLE ─── */
+.rebal-table table{min-width:320px}
+
+/* ─── FASE ─── */
+.fase-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.5rem}
+.fase-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:1rem;position:relative;overflow:hidden}
+.fase-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.fase-ttl{font-weight:700;font-size:12.5px;color:var(--text);margin-bottom:5px}
+.fase-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.fase-bar{position:absolute;bottom:0;left:0;height:2px;width:100%}
+
+/* ─── CHART ─── */
+.chart-wrap{position:relative;width:100%;height:220px}
+
+/* ─── FOOTER ─── */
+footer{border-top:1px solid var(--border);padding:1.2rem 1.5rem;max-width:1140px;margin:0 auto}
+.ft{font-family:var(--mono);font-size:9px;color:var(--faint);text-align:center;line-height:1.7}
+
+/* ─── PROMPT SECTION ─── */
+.prompt-section{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#06111f 0%,#091520 60%,#050d18 100%);
+  border:1px solid rgba(79,158,255,0.22);
+  border-radius:20px;padding:1.5rem;margin-bottom:1rem;
+}
+.prompt-section::before{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(34,211,200,0.08),transparent 65%);
+  pointer-events:none;
+}
+.prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;flex-wrap:wrap}
+.prompt-icon{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,rgba(79,158,255,0.2),rgba(34,211,200,0.15));
+  border:1px solid rgba(79,158,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.prompt-title{font-weight:800;font-size:15px;color:var(--blue2);letter-spacing:-.01em}
+.prompt-subtitle{font-size:11px;color:var(--muted);margin-top:1px}
+
+.prompt-box{
+  position:relative;
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  overflow:hidden;
+}
+.prompt-box-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.6rem 1rem;
+  background:rgba(79,158,255,0.06);
+  border-bottom:1px solid var(--border);
+}
+.prompt-box-label{
+  font-family:var(--mono);font-size:8px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--blue);
+  display:flex;align-items:center;gap:6px;
+}
+.prompt-box-label::before{content:'●';font-size:8px;color:var(--teal)}
+.copy-btn{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;
+  padding:5px 12px;border-radius:100px;cursor:pointer;border:none;
+  background:rgba(79,158,255,0.12);color:var(--blue);
+  border:1px solid rgba(79,158,255,0.25);
+  transition:all .2s;display:flex;align-items:center;gap:5px;
+}
+.copy-btn:hover{background:rgba(79,158,255,0.22);border-color:rgba(79,158,255,0.45)}
+.copy-btn.copied{background:rgba(46,204,138,0.15);color:var(--green);border-color:rgba(46,204,138,0.35)}
+.prompt-text{
+  padding:1.1rem 1.2rem;
+  font-family:var(--mono);font-size:11px;line-height:1.75;color:#94afd4;
+  white-space:pre-wrap;word-break:break-word;
+  max-height:420px;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(79,158,255,0.2) transparent;
+}
+.prompt-text::-webkit-scrollbar{width:4px}
+.prompt-text::-webkit-scrollbar-thumb{background:rgba(79,158,255,0.2);border-radius:2px}
+.prompt-text b,.prompt-text strong{color:var(--blue2);font-weight:700}
+
+.prompt-steps{display:grid;grid-template-columns:1fr;gap:7px;margin-top:1rem}
+.step-card{
+  display:flex;gap:10px;align-items:flex-start;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:10px;padding:.75rem .9rem;
+}
+.step-num{
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:9px;font-weight:700;
+}
+.step-body{flex:1}
+.step-ttl{font-weight:700;font-size:11.5px;color:var(--text);margin-bottom:2px}
+.step-desc{font-size:10.5px;color:var(--muted);line-height:1.5}
+
+@media(min-width:580px){
+  .prompt-steps{grid-template-columns:1fr 1fr}
+}
+@media(min-width:840px){
+  .prompt-steps{grid-template-columns:repeat(4,1fr)}
+}
+
+/* ─── SCROLL REVEAL ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.reveal{animation:fadeUp .45s ease both}
+.d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.2s}.d4{animation-delay:.28s}
+
+/* ─── RESPONSIVE ─── */
+@media(min-width:580px){
+  main{padding:2rem 2rem 6rem}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:840px){
+  main{padding:2.5rem 2.5rem 6rem}
+  header{padding:0 2.5rem}
+  .hero{padding:2.5rem}
+  .alloc-grid{grid-template-columns:repeat(3,1fr)}
+  .fase-grid{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Carteira<em>·</em>Fase 1</div>
+  <div class="hbadge">Fundação · Anos 1–3</div>
+</header>
+
+<main>
+
+<!-- HERO -->
+<div class="hero reveal">
+  <div class="eyebrow">Estratégia Patrimonial — Fase 1 · Maio 2026</div>
+  <h1>Concentrar para<br>Construir a Base</h1>
+  <p class="hero-sub">Com R$&nbsp;5.000/mês pulverizados em 19 ativos, a maioria receberia R$&nbsp;200–250 por mês — pouco para mover qualquer posição. A Fase 1 resolve isso: 7 ativos essenciais, um representante sólido de cada classe, aportes com peso real.</p>
+  <div class="kpis">
+    <div class="kpi"><p class="kpi-l">Ativos na Fase 1</p><p class="kpi-v blue-v">7</p><p class="kpi-s">vs. 19 na carteira final</p></div>
+    <div class="kpi"><p class="kpi-l">Aporte mensal</p><p class="kpi-v green-v">R$ 5.000</p><p class="kpi-s">100% concentrado</p></div>
+    <div class="kpi"><p class="kpi-l">Horizonte da fase</p><p class="kpi-v amber-v">2–3 anos</p><p class="kpi-s">Até ~R$ 150–200k</p></div>
+    <div class="kpi"><p class="kpi-l">Expansão Fase 2</p><p class="kpi-v teal-v">+12 ativos</p><p class="kpi-s">Conforme patrimônio cresce</p></div>
+  </div>
+</div>
+
+<!-- RACIONAL POR QUE CONCENTRAR -->
+<div class="card reveal d1">
+  <p class="sec-ttl">Por que concentrar no início?</p>
+
+  <div class="alloc-grid">
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(79,158,255,0.25),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--blue)">3×</div>
+      <div class="alloc-name">Posição com peso real</div>
+      <div class="alloc-desc">R$&nbsp;750/mês em 1 ativo constrói posição 3× mais rápido do que R$&nbsp;250 divididos em três.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--blue),var(--blue2));width:60%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(155,127,255,0.22),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--purple)">DCA</div>
+      <div class="alloc-name">Custo médio eficiente</div>
+      <div class="alloc-desc">Você aproveita toda a volatilidade num mesmo ativo em vez de pulverizar entre muitos tickers.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--purple),#b89aff);width:50%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(46,204,138,0.20),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--green)">7</div>
+      <div class="alloc-name">Fácil de acompanhar</div>
+      <div class="alloc-desc">7 ativos para monitorar fundamentos, DY e vacância. 19 ativos no início seria ruído puro.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--green),#6ee7b7);width:40%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(240,180,41,0.20),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--amber)">6</div>
+      <div class="alloc-name">Diversificação real</div>
+      <div class="alloc-desc">6 classes cobertas (FII papel, tijolo, dividendos, crescimento, internacional, caixa). Diversificado sem fragmentação.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--amber),#fcd34d);width:55%"></div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="info-card">
+      <p class="ic-ttl">Tesouro Selic ampliado para 10%</p>
+      <p>Na Fase 1 o caixa vai para 10% (vs. 5% na carteira final). Com patrimônio ainda pequeno, a capacidade de atacar crises com liquidez imediata vale mais do que o retorno incremental de renda variável.</p>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">BTCI11 entra no mês 6–9</p>
+      <p>Assim que o KNCR11 atingir peso adequado, o BTCI11 é adicionado para diversificar a proteção inflacionária com exposição a IPCA — sem sair da classe FII papel.</p>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">Rebalanceamento simplificado</p>
+      <p>Todo mês: calcule o peso real de cada ativo e direcione o aporte inteiro para o mais defasado. Com 7 ativos, isso leva menos de 10 minutos e não precisa de planilha complexa.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TABELA COMPLETA -->
+
+<div class="card reveal d2">
+  <p class="sec-ttl">Carteira Fase 1 — 7 Ativos de Fundação</p>
+  <div class="tbl-wrap">
+    <table id="main-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Ativo</th><th>Classe</th><th>Segmento</th>
+          <th>Peso</th><th>R$/mês</th><th>Risco</th><th>Nota</th>
+        </tr>
+      </thead>
+      <tbody id="main-tbody"></tbody>
+      <tfoot>
+        <tr><td colspan="4">TOTAL</td><td>100%</td><td>R$ 5.000</td><td colspan="2"></td></tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- RACIONAL DE SELEÇÃO -->
+<div class="card reveal d2">
+  <p class="sec-ttl">Racional de Seleção — Por que estes 7?</p>
+  <div class="g2">
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">KNCR11 — FII Papel (15% · R$ 750/mês)</p>
+        <p>CDI puro, liquidez altíssima, portfólio de CRI high grade. Representa os 3 FIIs papel da carteira final na Fase 1. Escolhido por ser o mais defensivo e líquido da classe — âncora da carteira em todo ciclo de Selic alta. BTCI11 entra como complemento a partir do mês 6–9.</p>
+      </div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">BTCI11 — FII Papel Complementar (5% · R$ 250/mês)</p>
+        <p>CRI diversificado com exposição a IPCA + CDI, gestão BTG, AAA. Entra na carteira assim que o KNCR11 atingir peso adequado. Complementa a proteção inflacionária sem sair da classe FII papel.</p>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">HGLG11 — FII Tijolo (20% · R$ 1.000/mês)</p>
+        <p>Maior e mais líquido FII logístico do Brasil. Portfólio A+, gestão CSHG com histórico 15+ anos, vacância historicamente baixa. Recebe o maior peso individual da Fase 1 porque logística é o segmento tijolo mais defensivo. Os demais FIIs tijolo (BTLG11, XPML11, TRXF11) entram na Fase 2.</p>
+      </div>
+    </div>
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">BBSE3 — Ações Dividendos (20% · R$ 1.000/mês)</p>
+        <p>Empresa com moat fortíssimo (rede BB Seguridade), payout elevado, baixíssima necessidade de capex. DY histórico consistente acima de 7%. Escolhida como representante das ações de dividendos por ter o menor risco regulatório da classe. ITSA4, CPLE3 e BBAS3 entram na Fase 2.</p>
+      </div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">WEGE3 — Ações Crescimento (15% · R$ 750/mês)</p>
+        <p>O melhor compounder brasileiro: expansão internacional consolidada, ROE consistentemente acima de 25%, sem alavancagem. Representa as 4 ações de crescimento da carteira final com o ativo de menor risco e maior histórico comprovado da classe. TOTS3, EQTL3 e RENT3 entram na Fase 2.</p>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">IVVB11 — Internacional (15% · R$ 750/mês)</p>
+        <p>Exposição ao índice mais líquido e diversificado do mundo com hedge natural em dólar. IVVB11 é mais líquido e com menor spread que WRLD11 e NASD11 — melhor opção única para representar a classe. Decorrelaciona da política fiscal brasileira em crises locais. WRLD11 e NASD11 entram na Fase 2.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="al al-info">
+    <span class="al-icon">ℹ</span>
+    <span><b>Tesouro Selic 2027 (LFT) — Caixa Estratégico (10% · R$&nbsp;500/mês):</b> Rentabilidade 100% da Selic Over · Liquidez D+1 · IR tabela regressiva (15% após 2 anos) · Isento de IOF após 30 dias · Compra via <b>tesouro.gov.br</b> (Tesouro Direto) ou home broker de qualquer corretora. O caixa está ampliado para 10% na Fase 1 (vs. 5% na carteira final): com patrimônio ainda pequeno, a capacidade de atacar crises imediatamente vale mais que o retorno incremental em renda variável.</span>
+  </div>
+</div>
+
+<!-- PROJEÇÃO PATRIMONIAL -->
+<div class="card reveal d3">
+  <p class="sec-ttl">Projeção Fase 1 — 3 Cenários (36 meses) + Visão 10 Anos</p>
+  <div class="g2" style="align-items:center;gap:1.25rem;margin-bottom:1rem">
+    <div class="chart-wrap"><canvas id="cProj"></canvas></div>
+    <div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="info-card">
+          <p class="kpi-l">Conservador — 10% a.a.</p>
+          <p style="font-weight:800;font-size:20px;color:var(--muted);letter-spacing:-.02em">~R$ 1,02M</p>
+          <p style="font-size:10px;color:var(--muted)">Meta atingida no limite do prazo</p>
+        </div>
+        <div class="info-card">
+          <p class="kpi-l">Base — 12% a.a.</p>
+          <p style="font-weight:800;font-size:20px;color:var(--blue);letter-spacing:-.02em">~R$ 1,25M</p>
+          <p style="font-size:10px;color:var(--muted)">Cenário realista, histórico compatível</p>
+        </div>
+        <div class="info-card">
+          <p class="kpi-l">Excelente — 14% a.a.</p>
+          <p style="font-weight:800;font-size:20px;color:var(--green);letter-spacing:-.02em">~R$ 1,55M</p>
+          <p style="font-size:10px;color:var(--muted)">Requer mercado favorável consistente</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:.5rem">
+    <div class="pr-row"><span class="pr-k">Retorno base ponderado</span><span class="pr-v" style="color:var(--blue)">12% a.a.</span></div>
+    <div class="pr-row"><span class="pr-k">FIIs Papel — retorno estimado</span><span class="pr-v">13,5% a.a. (12% DY + 1,5% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">FIIs Tijolo — retorno estimado</span><span class="pr-v">14% a.a. (9% DY + 5% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">Ações Dividendos — retorno estimado</span><span class="pr-v">13% a.a. (8% DY + 5% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">Ações Crescimento — retorno estimado</span><span class="pr-v">15% a.a. (5% DY + 10% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">Internacional — retorno estimado</span><span class="pr-v">10% a.a. (dólar + retorno S&P)</span></div>
+    <div class="pr-row"><span class="pr-k">Capital + aportes totais (10 anos)</span><span class="pr-v">R$ 640.000 · Fase 1 encerra em ~A3 (R$ 200k)</span></div>
+  </div>
+
+  <div class="al al-warn">
+    <span class="al-icon">⚠</span>
+    <span>Projeções assumem reinvestimento de 100% dos proventos e aportes mensais constantes. O retorno de 12% a.a. é alcançável mas não garantido — crises, mudanças regulatórias e deterioração de fundamentos podem reduzir os resultados. O cenário conservador (10% a.a.) ainda entrega R$1M, o que confere <b>margem de segurança real</b> à estratégia.</span>
+  </div>
+</div>
+
+<!-- PROTOCOLO REBALANCEAMENTO -->
+<div class="card reveal d3">
+  <p class="sec-ttl">Protocolo de Rebalanceamento</p>
+
+  <div class="rebal-table tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Cenário</th><th>Desvio</th><th>Ação</th><th>Urgência</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ativo abaixo do peso</td>
+          <td><span class="num wl">−1% a −3%</span></td>
+          <td class="hl">Aumentar aporte neste ativo</td>
+          <td><span class="pil p-amber">Mensal</span></td>
+        </tr>
+        <tr>
+          <td>Muito abaixo do peso</td>
+          <td><span class="num rl">−4% ou mais</span></td>
+          <td class="hl">Direcionar dividendos reinvestidos para o ativo</td>
+          <td><span class="pil p-red">Imediata</span></td>
+        </tr>
+        <tr>
+          <td>Ativo acima do peso</td>
+          <td><span class="num wl">+1% a +3%</span></td>
+          <td class="wl">Reduzir aporte, realocar nos defasados</td>
+          <td><span class="pil p-amber">Mensal</span></td>
+        </tr>
+        <tr>
+          <td>Muito acima do peso</td>
+          <td><span class="num rl">+5% ou mais</span></td>
+          <td class="wl">Pausar aportes; redirecionar tudo para defasados</td>
+          <td><span class="pil p-red">Imediata</span></td>
+        </tr>
+        <tr>
+          <td>Fundamento deteriorado</td>
+          <td><span class="num">Qualquer</span></td>
+          <td class="rl">Substituição imediata — não esperar ciclo</td>
+          <td><span class="pil p-red">Crítica</span></td>
+        </tr>
+        <tr>
+          <td>Crise / queda &gt; 10% em ativo AAA</td>
+          <td><span class="num hl">Qualquer</span></td>
+          <td class="hl">Usar caixa estratégico (Tesouro Selic) para comprar</td>
+          <td><span class="pil p-green">Oportunidade</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="g3" style="margin-top:.9rem">
+    <div class="info-card">
+      <p class="ic-ttl">📅 Mensal</p>
+      <ul>
+        <li>Comparar pesos reais vs. alvo</li>
+        <li>Direcionar aporte para os ativos defasados</li>
+        <li>Reinvestir proventos recebidos no mês</li>
+        <li>Verificar se caixa estratégico está em 5%</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">📊 Trimestral</p>
+      <ul>
+        <li>Revisar cenário de Selic e IPCA</li>
+        <li>Checar vacância e DY dos FIIs</li>
+        <li>Verificar lucro e payout das ações</li>
+        <li>Revisar performance dos ETFs internacionais</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">📋 Anual</p>
+      <ul>
+        <li>Revisão completa de pesos estratégicos</li>
+        <li>Avaliar se algum ativo deve ser substituído</li>
+        <li>Ajustar projeção com retornos realizados</li>
+        <li>Definir meta do próximo ano</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CRITÉRIOS DE SAÍDA -->
+<div class="card reveal d3">
+  <p class="sec-ttl">Critérios de Saída — Quando Substituir</p>
+  <div class="g2">
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">🔴 FIIs — Sinais de saída</p>
+        <ul>
+          <li>Queda de DY &gt; 30% sem justificativa temporária</li>
+          <li>Vacância acima de 15% por 2 trimestres seguidos</li>
+          <li>Troca de gestora sem histórico comprovado</li>
+          <li>Emissão dilutiva acima de 20% sem perspectiva de valorização</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">🔴 Ações — Sinais de saída</p>
+        <ul>
+          <li>Deterioração de margem operacional por 3 trimestres</li>
+          <li>Mudança de política de dividendos sem perspectiva de retorno</li>
+          <li>Alavancagem acima do histórico da empresa sem motivo estratégico</li>
+          <li>Para BBAS3: intervenção política clara na estratégia do banco</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">🟡 O que NÃO justifica saída</p>
+        <ul>
+          <li>Queda de cotação isolada sem deterioração de fundamentos</li>
+          <li>Notícia negativa de curto prazo em setor sólido</li>
+          <li>Selic subindo temporariamente (FII tijolo vai sofrer — é esperado)</li>
+          <li>Comparar DY atual com rentabilidade passada</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">✅ Regras de ouro</p>
+        <ul>
+          <li>Nunca vender por ruído de mercado ou manchete de jornal</li>
+          <li>Crises são oportunidades — usar o caixa estratégico</li>
+          <li>Se a tese original ainda vale, a queda é desconto, não problema</li>
+          <li>Revisão de portfólio &ne; operação frequente</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FASES DA JORNADA -->
+<div class="card reveal d4">
+  <p class="sec-ttl">Fases da Jornada</p>
+  <div class="fase-grid">
+    <div class="fase-card" style="border:1px solid rgba(79,158,255,0.35);box-shadow:0 0 0 1px rgba(79,158,255,0.15)">
+      <div class="fase-num">Anos 1–3 <span class="pil p-blue" style="margin-left:6px;font-size:7px">VOCÊ ESTÁ AQUI</span></div>
+      <div class="fase-ttl">Fundação</div>
+      <p class="fase-desc">7 ativos essenciais. Aportes concentrados para construir posição com peso real. Reinvestir 100% dos proventos. Não olhar para renda passiva — foco total em volume de cotas e ações.</p>
+      <div class="fase-bar" style="background:linear-gradient(90deg,var(--blue),var(--blue2))"></div>
+    </div>
+    <div class="fase-card">
+      <div class="fase-num">Anos 3–6</div>
+      <div class="fase-ttl">Expansão + Aceleração</div>
+      <p class="fase-desc">Patrimônio ≥ R$ 150k: expandir para os 19 ativos da carteira final (Fase 2). Os juros compostos começam a superar os aportes mensais. Revisar pesos anualmente.</p>
+      <div class="fase-bar" style="background:linear-gradient(90deg,var(--purple),#b89aff)"></div>
+    </div>
+    <div class="fase-card">
+      <div class="fase-num">Anos 7–9</div>
+      <div class="fase-ttl">Decolagem</div>
+      <p class="fase-desc">Cenário base: R$1M atingido no ano 10. Planejar transição: definir quanto dos proventos começar a consumir. Manter aportes se possível.</p>
+      <div class="fase-bar" style="background:linear-gradient(90deg,var(--green),#6ee7b7)"></div>
+    </div>
+    <div class="fase-card">
+      <div class="fase-num">Ano 10+</div>
+      <div class="fase-ttl">Independência</div>
+      <p class="fase-desc">Renda passiva entre R$8k–11k/mês. Reinvestir parcialmente para manter crescimento. A carteira se torna autossustentável.</p>
+      <div class="fase-bar" style="background:linear-gradient(90deg,var(--amber),#fcd34d)"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- PROMPT PARA AGENTE DE IA -->
+<div class="prompt-section reveal d4">
+
+  <div class="prompt-header">
+    <div class="prompt-icon">🤖</div>
+    <div>
+      <div class="prompt-title">Prompt para Agente de IA</div>
+      <div class="prompt-subtitle">Cole em qualquer LLM (Claude, ChatGPT, Gemini) junto com esta página ou o PDF da carteira</div>
+    </div>
+    <span class="pil p-teal" style="margin-left:auto">Pronto para usar</span>
+  </div>
+
+  <div class="prompt-steps">
+    <div class="step-card">
+      <div class="step-num" style="background:rgba(79,158,255,0.15);color:var(--blue)">1</div>
+      <div class="step-body">
+        <div class="step-ttl">Copie o prompt</div>
+        <div class="step-desc">Clique em "Copiar prompt" abaixo para copiar o texto completo</div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num" style="background:rgba(155,127,255,0.15);color:var(--purple)">2</div>
+      <div class="step-body">
+        <div class="step-ttl">Abra o agente de IA</div>
+        <div class="step-desc">Claude, ChatGPT, Gemini ou qualquer LLM com acesso à internet</div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num" style="background:rgba(46,204,138,0.15);color:var(--green)">3</div>
+      <div class="step-body">
+        <div class="step-ttl">Cole e envie</div>
+        <div class="step-desc">Cole o prompt e, se possível, anexe este arquivo HTML junto</div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num" style="background:rgba(240,180,41,0.15);color:var(--amber)">4</div>
+      <div class="step-body">
+        <div class="step-ttl">Informe sua carteira real</div>
+        <div class="step-desc">O agente pedirá seus saldos e cotas atuais para calcular os aportes</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prompt-box" style="margin-top:1rem">
+    <div class="prompt-box-header">
+      <div class="prompt-box-label">Prompt completo</div>
+      <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">
+        <span id="copyIcon">⧉</span>
+        <span id="copyLabel">Copiar prompt</span>
+      </button>
+    </div>
+    <div class="prompt-text" id="promptContent"></div>
+  </div>
+
+  <div class="al al-info" style="margin-top:.9rem">
+    <span class="al-icon">ℹ</span>
+    <span>Para melhores resultados, use um agente com <b>acesso à internet em tempo real</b> (ex: Claude com busca ativada, ChatGPT com Browsing, Perplexity). Isso permite que ele consulte cotações e notícias atuais de cada ativo antes de recomendar os aportes.</span>
+  </div>
+
+</div>
+
+</main>
+
+<footer>
+  <p class="ft">Carteira Fase 1 — Fundação · Estratégia Patrimonial · Maio 2026</p>
+  <p class="ft">Não constitui recomendação de investimento. Valide preços-teto vigentes antes de aportar. Consulte um assessor certificado.</p>
+</footer>
+
+<script>
+/* ──────────────────────────────────────────
+   PROMPT DO AGENTE — FASE 1
+────────────────────────────────────────── */
+const PROMPT_TEXT = `# ATIVAÇÃO DE SKILL — ESPECIALISTA EM INVESTIMENTOS BRASILEIROS
+
+Você é um especialista sênior em investimentos de renda variável e renda fixa do mercado brasileiro, com foco em construção patrimonial de longo prazo. Seu perfil combina:
+
+- Analista fundamentalista com experiência em FIIs (Fundos Imobiliários), ações de dividendos e compounders brasileiros
+- Especialista em alocação de ativos e rebalanceamento de carteiras
+- Conhecimento profundo do mercado brasileiro: ciclos de Selic, IPCA, regulação da CVM, isenção de IR em FIIs, tributação de ações
+- Capacidade de interpretar DY (Dividend Yield), PVP, vacância, FFO, P/L, ROE e outros indicadores relevantes
+- Perfil conservador na comunicação: direto, sem promessas de retorno garantido, sempre destacando riscos reais
+
+---
+
+## CONTEXTO DA CARTEIRA — FASE 1 (Anos 1–3)
+
+O investidor está na Fase 1 da construção patrimonial: concentrar aportes em 7 ativos essenciais antes de expandir para a carteira completa de 19 ativos. Meta: atingir R$ 1.000.000 em 10 anos, aportando R$ 5.000 mensais com capital inicial de R$ 40.000.
+
+**Alocação alvo — Fase 1:**
+- KNCR11 (FII Papel CDI puro): 15% → R$ 750/mês
+- HGLG11 (FII Tijolo Logística premium): 20% → R$ 1.000/mês
+- BBSE3 (Ações Dividendos / Seguros): 20% → R$ 1.000/mês
+- WEGE3 (Ações Crescimento / Indústria Global): 15% → R$ 750/mês
+- IVVB11 (Internacional / ETF S&P 500): 15% → R$ 750/mês
+- BTCI11 (FII Papel CRI / entra mês 6–9): 5% → R$ 250/mês
+- Tesouro Selic 2027 (LFT) (Caixa Estratégico): 10% → R$ 500/mês
+
+**Detalhes do Tesouro Selic:**
+- Título: LFT (Tesouro Selic) 2027
+- Rentabilidade: 100% da Selic Over
+- Liquidez: D+1 (resgate em 1 dia útil)
+- Imposto: tabela regressiva IR (22,5% até 180 dias → 15% acima de 720 dias); isento de IOF após 30 dias
+- Onde comprar: tesouro.gov.br (Tesouro Direto) ou home broker de qualquer corretora
+
+**Premissas de retorno:**
+- Cenário conservador: 10% a.a. → ~R$ 1,02M em 10 anos
+- Cenário base: 12% a.a. → ~R$ 1,25M em 10 anos
+- Cenário excelente: 14% a.a. → ~R$ 1,55M em 10 anos
+
+**Gatilhos para migrar para Fase 2 (expandir para 19 ativos):**
+- Patrimônio ≥ R$ 150.000, OU
+- Cada ativo da Fase 1 com posição ≥ R$ 15.000–20.000, OU
+- Renda passiva mensal ≥ R$ 600–700
+
+---
+
+## TAREFAS — EXECUTE NA SEGUINTE ORDEM
+
+### ETAPA 1 — ANÁLISE DE MERCADO ATUAL (faça isso AGORA, antes de pedir qualquer dado)
+
+Pesquise e analise a situação atual de cada ativo da Fase 1. Para cada um, informe:
+
+**FIIs (KNCR11, HGLG11, BTCI11):**
+- Cotação atual e variação recente (30 dias)
+- DY dos últimos 12 meses
+- PVP atual (ágio ou desconto sobre o valor patrimonial)
+- Sinal de entrada: COMPRA / NEUTRO / AGUARDAR (com justificativa breve)
+- Algum evento relevante recente (emissão de cotas, mudança de gestão, calote de CRI, vacância, etc.)
+
+**Ações BR (BBSE3, WEGE3):**
+- Cotação atual e variação recente (30 dias)
+- DY projetado e P/L atual
+- Margem de segurança em relação ao preço justo estimado
+- Sinal de entrada: COMPRA / NEUTRO / AGUARDAR (com justificativa breve)
+- Algum evento relevante recente (resultado trimestral, guidance, risco regulatório, etc.)
+
+**ETF Internacional (IVVB11):**
+- Cotação atual em BRL e variação
+- Performance do S&P 500 subjacente
+- Tendência atual do câmbio USD/BRL e impacto na alocação
+
+**Tesouro Selic (LFT 2027):**
+- Selic atual (% a.a.) e expectativa Focus para os próximos 6 meses
+- Rendimento líquido estimado para aportes novos (após IR tabela regressiva)
+- Recomendação: manter 10% de caixa ou ajustar?
+
+**Contexto macro:**
+- Selic atual e expectativa para os próximos 6 meses (Focus/Copom)
+- IPCA acumulado 12 meses
+- Impacto desse cenário macro na estratégia (favorece KNCR11 CDI ou BTCI11 IPCA? momento de aumentar HGLG11 tijolo?)
+
+Ao final da Etapa 1, apresente um **semáforo resumido** de todos os ativos (🟢 COMPRA / 🟡 NEUTRO / 🔴 AGUARDAR) em formato de tabela.
+
+---
+
+### ETAPA 2 — COLETA DA SITUAÇÃO REAL DO INVESTIDOR
+
+Após apresentar a análise de mercado, peça ao investidor que informe:
+
+"Para calcular como distribuir seu aporte mensal de R$ 5.000 de forma otimizada, preciso entender sua posição atual. Por favor, informe:
+
+**Para cada ativo que você já possui:**
+- Ticker e quantidade de cotas/ações
+- Preço médio de compra (opcional, mas útil)
+- Valor total atual investido (ou posso calcular com cotação × cotas)
+
+**Tesouro Selic:**
+- Valor total investido em LFT
+- Data da última aplicação (para estimar o prazo de IR)
+
+**Se preferir, pode informar de forma simplificada:**
+- Valor total em reais por ativo
+- Ou simplesmente dizer 'estou começando do zero'
+
+**Também me informe:**
+- O BTCI11 já foi iniciado? (ele entra como 7º ativo a partir do mês 6–9 da Fase 1)
+- Há algum ativo fora da Fase 1 que você já possui?"
+
+---
+
+### ETAPA 3 — CÁLCULO E RECOMENDAÇÃO DE APORTE
+
+Com base nos dados do investidor e na análise de mercado:
+
+1. **Calcule o peso atual** de cada ativo na carteira real vs. o peso alvo da Fase 1
+2. **Identifique os desvios** aplicando o protocolo de rebalanceamento:
+   - Desvio de -1% a -3%: aumentar aporte
+   - Desvio de -4% ou mais: prioridade máxima + redirecionar dividendos
+   - Desvio de +1% a +3%: reduzir aporte
+   - Desvio de +5% ou mais: pausar aportes neste ativo
+3. **Cruze o desvio de peso com o sinal de mercado**: não aportar em ativo com sinal 🔴 mesmo que esteja defasado — aguardar melhora de fundamento
+4. **Para o Tesouro Selic**: se o patrimônio total já ultrapassou R$ 80.000, avalie se manter 10% de caixa ainda faz sentido ou se reduzir para 7% libera mais capital para renda variável
+5. **Gere uma tabela de aporte do mês** com:
+   - Ativo | Peso atual | Peso alvo | Desvio | Sinal | Aporte recomendado (R$) | Justificativa
+6. O total dos aportes deve somar R$ 5.000
+
+---
+
+### ETAPA 4 — AVALIAÇÃO DE GATILHO PARA FASE 2
+
+Após as recomendações, verifique se o investidor está próximo de ativar a Fase 2:
+
+1. **O patrimônio está próximo de R$ 150.000?** Se sim, comece a mapear quais ativos abrir primeiro na Fase 2 e em que ordem
+2. **Algum ativo da Fase 1 tem posição ≥ R$ 15.000?** Liste os que já atingiram maturidade
+3. **A renda passiva mensal atual é de quanto?** Calcule com base nos proventos dos FIIs e dividendos das ações
+4. **Recomendação sobre BTCI11**: caso ainda não tenha sido iniciado, é o momento certo para abrir essa posição?
+5. **Uma recomendação objetiva**: o que o investidor deve fazer de diferente nos próximos 3 meses?
+
+---
+
+## REGRAS DE COMPORTAMENTO
+
+- Seja direto e objetivo. Não enrole.
+- Sempre fundamente com números reais consultados (cotação, DY, PVP, etc.)
+- Nunca prometa retorno garantido. Use sempre "estimado", "projetado", "histórico"
+- Se um dado não estiver disponível, diga explicitamente em vez de inventar
+- Para o Tesouro Selic, sempre informe o rendimento líquido estimado (já descontando IR), não o bruto
+- Separe claramente o que é fato (dados) do que é opinião (análise)
+- Ao final de cada etapa, pergunte se o investidor quer aprofundar algum ponto antes de avançar`;
+
+document.getElementById('promptContent').textContent = PROMPT_TEXT;
+
+function copyPrompt() {
+  navigator.clipboard.writeText(PROMPT_TEXT).then(() => {
+    const btn = document.getElementById('copyBtn');
+    const lbl = document.getElementById('copyLabel');
+    const ico = document.getElementById('copyIcon');
+    btn.classList.add('copied');
+    lbl.textContent = 'Copiado!';
+    ico.textContent = '✓';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      lbl.textContent = 'Copiar prompt';
+      ico.textContent = '⧉';
+    }, 2500);
+  }).catch(() => {
+    const el = document.getElementById('promptContent');
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+  });
+}
+
+/* ──────────────────────────────────────────
+   DADOS DOS ATIVOS — FASE 1
+────────────────────────────────────────── */
+const ATIVOS = [
+  // [ticker, classe, segmento, peso%, risco, nota, cor_classe]
+  ['KNCR11','FII Papel','CDI puro',15,'AAA','COMPRA','#4f9eff'],
+  ['BTCI11','FII Papel','CRI diversificado (entra mês 6–9)',5,'AAA','COMPRA','#4f9eff'],
+  ['HGLG11','FII Tijolo','Logística premium',20,'AAA','COMPRA','#9b7fff'],
+  ['BBSE3','Ações Div.','Seguros / BB Seguridade',20,'AAA','COMPRA','#2ecc8a'],
+  ['WEGE3','Ações Cresc.','Indústria / Global',15,'AAA','COMPRA','#f0b429'],
+  ['IVVB11','Internacional','ETF S&P 500 (USD)',15,'AAA','COMPRA','#22d3c8'],
+  ['Tesouro Selic 2027','Caixa','LFT · 100% Selic · D+1 · Tesouro Direto',10,'AAA','—','#6a82a8'],
+];
+
+const GRUPOS = [
+  {label:'FIIs Papel — 20% · R$ 1.000/mês', i0:0, i1:2},
+  {label:'FIIs Tijolo — 20% · R$ 1.000/mês', i0:2, i1:3},
+  {label:'Ações Dividendos — 20% · R$ 1.000/mês', i0:3, i1:4},
+  {label:'Ações Crescimento — 15% · R$ 750/mês', i0:4, i1:5},
+  {label:'Internacional — 15% · R$ 750/mês', i0:5, i1:6},
+  {label:'Caixa Estratégico — 10% · R$ 500/mês', i0:6, i1:7},
+];
+
+function riscoPil(r){
+  if(r==='AAA') return `<span class="pil p-green">${r}</span>`;
+  if(r==='AA')  return `<span class="pil p-blue">${r}</span>`;
+  if(r==='A')   return `<span class="pil p-purple">${r}</span>`;
+  return `<span class="pil">${r}</span>`;
+}
+function notaPil(n){
+  if(n==='COMPRA')   return `<span class="pil p-green">${n}</span>`;
+  if(n==='NEUTRO')   return `<span class="pil p-amber">${n}</span>`;
+  if(n==='MONITORAR') return `<span class="pil p-amber">${n}</span>`;
+  return `<span class="pil">${n}</span>`;
+}
+
+const tbody = document.getElementById('main-tbody');
+let idx = 1;
+GRUPOS.forEach(g => {
+  const sub = document.createElement('tr');
+  sub.className = 'sub-row';
+  sub.innerHTML = `<td colspan="8">${g.label}</td>`;
+  tbody.appendChild(sub);
+  ATIVOS.slice(g.i0, g.i1).forEach(a => {
+    const tr = document.createElement('tr');
+    const aporte = Math.round(a[3] * 50);
+    tr.innerHTML = `
+      <td style="font-family:var(--mono);font-size:9px;color:var(--muted)">${String(idx++).padStart(2,'0')}</td>
+      <td><span class="tk">${a[0]}</span></td>
+      <td><span class="pil" style="background:${a[6]}22;color:${a[6]};border:1px solid ${a[6]}44;font-size:7px">${a[1]}</span></td>
+      <td style="color:var(--muted);font-size:11.5px">${a[2]}</td>
+      <td class="hl">${a[3]}%</td>
+      <td style="font-family:var(--mono);font-weight:600;color:var(--text)">R$ ${aporte.toLocaleString('pt-BR')}</td>
+      <td>${riscoPil(a[4])}</td>
+      <td>${notaPil(a[5])}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+});
+
+/* ──────────────────────────────────────────
+   GRÁFICO DE PROJEÇÃO — FASE 1 (36 meses) + 10 anos
+────────────────────────────────────────── */
+function calcPatrimonio(retAa, anos) {
+  const rm = Math.pow(1 + retAa, 1/12) - 1;
+  let p = 40000;
+  const result = [];
+  for(let m = 1; m <= anos*12; m++) {
+    p = p * (1 + rm) + 5000;
+    if(m % 12 === 0) result.push(Math.round(p / 1000));
+  }
+  return result;
+}
+
+const anos = ['A1','A2','A3','A4','A5','A6','A7','A8','A9','A10'];
+const conserv  = calcPatrimonio(0.10, 10);
+const base     = calcPatrimonio(0.12, 10);
+const excelent = calcPatrimonio(0.14, 10);
+
+new Chart(document.getElementById('cProj'), {
+  type: 'line',
+  data: {
+    labels: anos,
+    datasets: [
+      {
+        label: 'Conservador 10%',
+        data: conserv,
+        borderColor: '#6a82a8',
+        backgroundColor: 'rgba(106,130,168,0.05)',
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: '#6a82a8',
+        tension: .4, fill: true,
+      },
+      {
+        label: 'Base 12%',
+        data: base,
+        borderColor: '#4f9eff',
+        backgroundColor: 'rgba(79,158,255,0.08)',
+        borderWidth: 2.5,
+        pointRadius: 3,
+        pointBackgroundColor: '#4f9eff',
+        tension: .4, fill: true,
+      },
+      {
+        label: 'Excelente 14%',
+        data: excelent,
+        borderColor: '#2ecc8a',
+        backgroundColor: 'rgba(46,204,138,0.06)',
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: '#2ecc8a',
+        tension: .4, fill: true,
+      },
+      {
+        label: 'Fim Fase 1 (~R$ 200k)',
+        data: Array(10).fill(200),
+        borderColor: 'rgba(240,180,41,0.6)',
+        borderWidth: 1.5,
+        borderDash: [6,4],
+        pointRadius: 0,
+        fill: false,
+      },
+      {
+        label: 'Meta R$1M',
+        data: Array(10).fill(1000),
+        borderColor: 'rgba(46,204,138,0.4)',
+        borderWidth: 1.5,
+        borderDash: [4,4],
+        pointRadius: 0,
+        fill: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#6a82a8', font: { family: 'JetBrains Mono', size: 9 }, boxWidth: 10, padding: 12 }
+      },
+      tooltip: {
+        callbacks: {
+          label: c => ` ${c.dataset.label}: R$ ${c.raw}k`
+        }
+      }
+    },
+    scales: {
+      y: {
+        ticks: { color: '#475569', font: { family: 'JetBrains Mono', size: 9 }, callback: v => 'R$'+v+'k' },
+        grid: { color: 'rgba(79,158,255,0.06)' },
+        border: { color: 'rgba(79,158,255,0.06)' }
+      },
+      x: {
+        ticks: { color: '#475569', font: { family: 'JetBrains Mono', size: 9 } },
+        grid: { color: 'rgba(79,158,255,0.04)' },
+        border: { color: 'rgba(79,158,255,0.04)' }
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
