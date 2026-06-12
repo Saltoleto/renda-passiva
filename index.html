@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Carteira Saltoleto — R$1M em 10 Anos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04080f;--bg2:#070d1a;--card:#0b1120;--card2:#0e1628;--card3:#111c33;
+  --border:rgba(100,140,255,0.10);--border2:rgba(100,140,255,0.18);
+  --text:#dce8ff;--muted:#6a82a8;--faint:#2a3a5c;
+  --blue:#4f9eff;--blue2:#7bb8ff;--blue-glow:rgba(79,158,255,0.15);
+  --green:#2ecc8a;--green-glow:rgba(46,204,138,0.13);
+  --amber:#f0b429;--amber-glow:rgba(240,180,41,0.13);
+  --red:#ff5f72;--red-glow:rgba(255,95,114,0.13);
+  --purple:#9b7fff;--purple-glow:rgba(155,127,255,0.13);
+  --teal:#22d3c8;--teal-glow:rgba(34,211,200,0.12);
+  --r:16px;--rs:10px;--font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(79,158,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(79,158,255,0.025) 1px,transparent 1px);
+  background-size:48px 48px;}
+
+/* ─── HEADER ─── */
+header{position:sticky;top:0;z-index:200;background:rgba(4,8,15,0.92);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.5rem;height:52px;}
+.logo{font-family:var(--font);font-weight:800;font-size:15px;color:var(--text);letter-spacing:-.02em}
+.logo em{color:var(--blue);font-style:normal}
+.hbadge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;background:var(--green-glow);color:var(--green);border:1px solid rgba(46,204,138,0.22);}
+
+/* ─── TABS NAV ─── */
+.tabs-nav{
+  position:sticky;top:52px;z-index:150;
+  background:rgba(4,8,15,0.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:stretch;padding:0 1.5rem;gap:0;
+}
+.tab-btn{
+  font-family:var(--font);font-weight:700;font-size:13px;
+  padding:0 1.25rem;height:48px;cursor:pointer;border:none;background:transparent;
+  color:var(--muted);display:flex;align-items:center;gap:8px;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .2s,border-color .2s;white-space:nowrap;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-btn.active.fase2{color:var(--teal);border-bottom-color:var(--teal)}
+.tab-badge{
+  font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:2px 7px;border-radius:100px;
+}
+.badge-fase1{background:rgba(79,158,255,0.15);color:var(--blue);border:1px solid rgba(79,158,255,0.25)}
+.badge-fase2{background:rgba(34,211,200,0.13);color:var(--teal);border:1px solid rgba(34,211,200,0.22)}
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar-wrap{
+  background:rgba(4,8,15,0.95);
+  border-bottom:1px solid var(--border);
+  padding:.6rem 1.5rem;
+  display:none;
+}
+.progress-bar-wrap.visible{display:block}
+.pb-label{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between}
+.pb-track{height:4px;background:var(--card3);border-radius:2px;overflow:hidden}
+.pb-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--teal));transition:width .6s ease}
+.pb-gatilhos{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.pb-g{
+  display:flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:9px;color:var(--muted);
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:6px;padding:4px 8px;
+}
+.pb-g.done{color:var(--green);border-color:rgba(46,204,138,0.25);background:var(--green-glow)}
+.pb-g .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ─── TAB PANELS ─── */
+.tab-panel{display:none;position:relative;z-index:1}
+.tab-panel.active{display:block}
+
+/* ─── MAIN ─── */
+main{padding:1.5rem 1.5rem 6rem;max-width:1140px;margin:0 auto}
+
+/* ─── HERO ─── */
+.hero{position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#090f1e 0%,#0b1427 60%,#070c18 100%);
+  border:1px solid var(--border2);border-radius:24px;padding:2rem;margin-bottom:1.25rem;}
+.hero::before{content:'';position:absolute;top:-120px;right:-80px;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(79,158,255,0.12),transparent 65%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-100px;left:-60px;width:350px;height:350px;border-radius:50%;
+  background:radial-gradient(circle,rgba(46,204,138,0.07),transparent 65%);pointer-events:none;}
+.hero.teal-hero::before{background:radial-gradient(circle,rgba(34,211,200,0.12),transparent 65%)}
+.hero.teal-hero::after{background:radial-gradient(circle,rgba(79,158,255,0.07),transparent 65%)}
+.eyebrow{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--blue2);background:var(--blue-glow);border:1px solid rgba(79,158,255,0.22);
+  padding:4px 10px;border-radius:100px;margin-bottom:14px;}
+.eyebrow.teal{color:var(--teal);background:var(--teal-glow);border-color:rgba(34,211,200,0.22)}
+.hero h1{font-weight:900;font-size:clamp(24px,5vw,42px);line-height:1.1;letter-spacing:-.03em;margin-bottom:10px;
+  background:linear-gradient(135deg,#dce8ff 0%,#7bb8ff 50%,#4f9eff 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero h1.teal-grad{background:linear-gradient(135deg,#dce8ff 0%,#5eead4 50%,#22d3c8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:13px;color:var(--muted);max-width:620px;line-height:1.6;margin-bottom:1.5rem}
+
+/* ─── KPIs ─── */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.kpi{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;}
+.kpi-l{font-family:var(--mono);font-size:8px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.kpi-v{font-weight:800;font-size:22px;line-height:1.1;letter-spacing:-.02em}
+.kpi-s{font-size:10px;color:var(--muted);margin-top:3px}
+.blue-v{color:var(--blue)}.green-v{color:var(--green)}.amber-v{color:var(--amber)}.teal-v{color:var(--teal)}.purple-v{color:var(--purple)}
+
+/* ─── TRACKER INTERATIVO ─── */
+.tracker-card{
+  background:var(--card);border:1px solid var(--border2);border-radius:var(--r);
+  padding:1.25rem;margin-bottom:1rem;
+}
+.tracker-title{font-weight:800;font-size:15px;color:var(--teal);display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;letter-spacing:-.01em}
+.tracker-title::before{content:'';width:3px;height:18px;background:linear-gradient(180deg,var(--teal),var(--blue));border-radius:2px;flex-shrink:0}
+.tracker-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.tracker-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem}
+.tracker-item-label{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.tracker-input-row{display:flex;align-items:center;gap:10px}
+.tracker-input{
+  font-family:var(--mono);font-size:13px;font-weight:600;
+  background:var(--card3);border:1px solid var(--border2);border-radius:8px;
+  color:var(--text);padding:6px 10px;width:140px;outline:none;
+  transition:border-color .2s;
+}
+.tracker-input:focus{border-color:rgba(34,211,200,0.4)}
+.tracker-target{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.tracker-status{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;white-space:nowrap}
+.status-done{background:var(--green-glow);color:var(--green);border:1px solid rgba(46,204,138,0.25)}
+.status-pend{background:var(--amber-glow);color:var(--amber);border:1px solid rgba(240,180,41,0.25)}
+.tracker-unlock{
+  margin-top:1rem;padding:.9rem 1rem;border-radius:10px;
+  background:var(--card2);border:1px solid var(--border);
+  font-size:12.5px;color:var(--muted);line-height:1.6;
+  display:flex;align-items:center;gap:10px;
+}
+.tracker-unlock.unlocked{background:var(--green-glow);border-color:rgba(46,204,138,0.3);color:#a7f3d0}
+.tracker-pct{font-family:var(--mono);font-weight:800;font-size:22px;line-height:1;flex-shrink:0}
+
+/* ─── CARD ─── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;}
+.sec-ttl{font-weight:800;font-size:15px;color:var(--blue2);display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;letter-spacing:-.01em}
+.sec-ttl::before{content:'';width:3px;height:18px;background:linear-gradient(180deg,var(--blue),var(--teal));border-radius:2px;flex-shrink:0}
+.sec-ttl.teal-ttl{color:var(--teal)}
+.sec-ttl.teal-ttl::before{background:linear-gradient(180deg,var(--teal),var(--blue))}
+
+/* ─── ALLOC BLOCKS ─── */
+.alloc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.alloc-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:1rem;position:relative;overflow:hidden;}
+.alloc-glow{position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;pointer-events:none;opacity:.6}
+.alloc-pct{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;margin-bottom:5px;letter-spacing:-.03em}
+.alloc-name{font-weight:700;font-size:12px;margin-bottom:3px}
+.alloc-desc{font-size:10.5px;color:var(--muted);line-height:1.5}
+.alloc-bar{height:3px;border-radius:2px;margin-top:10px;opacity:.7}
+
+/* ─── PILULAS ─── */
+.pil{display:inline-block;font-family:var(--mono);font-size:7.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:100px;}
+.p-blue{background:var(--blue-glow);color:var(--blue);border:1px solid rgba(79,158,255,0.22)}
+.p-green{background:var(--green-glow);color:var(--green);border:1px solid rgba(46,204,138,0.22)}
+.p-amber{background:var(--amber-glow);color:var(--amber);border:1px solid rgba(240,180,41,0.22)}
+.p-purple{background:var(--purple-glow);color:var(--purple);border:1px solid rgba(155,127,255,0.22)}
+.p-teal{background:var(--teal-glow);color:var(--teal);border:1px solid rgba(34,211,200,0.22)}
+.p-red{background:var(--red-glow);color:var(--red);border:1px solid rgba(255,95,114,0.22)}
+
+/* ─── TABELA ─── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1.25rem;padding:0 1.25rem}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px}
+thead th{background:var(--card3);font-family:var(--mono);font-size:8px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--blue);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border2);white-space:nowrap;}
+tbody td{padding:10px 10px;border-bottom:1px solid rgba(79,158,255,0.06);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(79,158,255,0.03)}
+tfoot td{padding:9px 10px;background:rgba(79,158,255,0.08);font-family:var(--mono);font-weight:700;color:var(--blue);font-size:11px}
+.tk{font-family:var(--mono);font-size:11px;background:var(--card3);border:1px solid var(--border);padding:3px 7px;border-radius:6px;color:var(--text);}
+.num{font-family:var(--mono);font-weight:600}
+.hl{color:var(--green);font-family:var(--mono);font-weight:700}
+.wl{color:var(--amber);font-family:var(--mono);font-weight:700}
+.rl{color:var(--red);font-family:var(--mono);font-weight:700}
+.sub-row td{background:rgba(79,158,255,0.06);font-family:var(--mono);font-size:8.5px;font-weight:700;color:var(--blue2);letter-spacing:.05em;text-transform:uppercase;padding:6px 10px;}
+
+/* ─── ALERTAS ─── */
+.al{border-radius:10px;padding:.8rem 1rem;margin-top:.75rem;font-size:12px;line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+.al-ok{background:var(--green-glow);border:1px solid rgba(46,204,138,0.22);color:#a7f3d0}
+.al-warn{background:var(--amber-glow);border:1px solid rgba(240,180,41,0.22);color:#fde68a}
+.al-info{background:var(--blue-glow);border:1px solid rgba(79,158,255,0.22);color:#bae6fd}
+.al-teal{background:var(--teal-glow);border:1px solid rgba(34,211,200,0.22);color:#99f6e4}
+.al-err{background:var(--red-glow);border:1px solid rgba(255,95,114,0.22);color:#fecaca}
+.al b{font-weight:700}
+.al-icon{flex-shrink:0;margin-top:2px;font-size:13px}
+
+/* ─── PREMISSAS ─── */
+.pr-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.pr-row:last-child{border-bottom:none}
+.pr-k{color:var(--muted)}.pr-v{font-family:var(--mono);font-weight:500;color:var(--text)}
+
+/* ─── GRIDS ─── */
+.g2{display:grid;grid-template-columns:1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr;gap:10px}
+.info-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem}
+.info-card .ic-ttl{font-weight:700;font-size:11.5px;color:var(--blue2);margin-bottom:.4rem}
+.info-card p{font-size:11.5px;color:var(--muted);line-height:1.5}
+.info-card ul{padding-left:.9rem;margin-top:.3rem}
+.info-card li{font-size:11.5px;color:var(--muted);margin-bottom:3px;line-height:1.5}
+
+/* ─── REBAL TABLE ─── */
+.rebal-table table{min-width:320px}
+
+/* ─── FASE CARDS ─── */
+.fase-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.5rem}
+.fase-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:1rem;position:relative;overflow:hidden}
+.fase-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.fase-ttl{font-weight:700;font-size:12.5px;color:var(--text);margin-bottom:5px}
+.fase-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.fase-bar{position:absolute;bottom:0;left:0;height:2px;width:100%}
+.fase-card.current{border-color:rgba(79,158,255,0.35);box-shadow:0 0 0 1px rgba(79,158,255,0.12)}
+
+/* ─── CHART ─── */
+.chart-wrap{position:relative;width:100%;height:220px}
+
+/* ─── PROMPT SECTION ─── */
+.prompt-section{position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#06111f 0%,#091520 60%,#050d18 100%);
+  border:1px solid rgba(79,158,255,0.22);border-radius:20px;padding:1.5rem;margin-bottom:1rem;}
+.prompt-section::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(34,211,200,0.08),transparent 65%);pointer-events:none;}
+.prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;flex-wrap:wrap}
+.prompt-icon{width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,rgba(79,158,255,0.2),rgba(34,211,200,0.15));
+  border:1px solid rgba(79,158,255,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.prompt-title{font-weight:800;font-size:15px;color:var(--blue2);letter-spacing:-.01em}
+.prompt-subtitle{font-size:11px;color:var(--muted);margin-top:1px}
+.prompt-box{position:relative;background:var(--bg);border:1px solid var(--border2);border-radius:14px;overflow:hidden;}
+.prompt-box-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1rem;
+  background:rgba(79,158,255,0.06);border-bottom:1px solid var(--border);}
+.prompt-box-label{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--blue);display:flex;align-items:center;gap:6px;}
+.prompt-box-label::before{content:'●';font-size:8px;color:var(--teal)}
+.copy-btn{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:5px 12px;border-radius:100px;cursor:pointer;border:none;
+  background:rgba(79,158,255,0.12);color:var(--blue);border:1px solid rgba(79,158,255,0.25);
+  transition:all .2s;display:flex;align-items:center;gap:5px;}
+.copy-btn:hover{background:rgba(79,158,255,0.22);border-color:rgba(79,158,255,0.45)}
+.copy-btn.copied{background:rgba(46,204,138,0.15);color:var(--green);border-color:rgba(46,204,138,0.35)}
+.prompt-text{padding:1.1rem 1.2rem;font-family:var(--mono);font-size:11px;line-height:1.75;color:#94afd4;
+  white-space:pre-wrap;word-break:break-word;max-height:420px;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(79,158,255,0.2) transparent;}
+.prompt-text::-webkit-scrollbar{width:4px}
+.prompt-text::-webkit-scrollbar-thumb{background:rgba(79,158,255,0.2);border-radius:2px}
+.prompt-steps{display:grid;grid-template-columns:1fr;gap:7px;margin-top:1rem}
+.step-card{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,0.02);
+  border:1px solid var(--border);border-radius:10px;padding:.75rem .9rem;}
+.step-num{width:22px;height:22px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;}
+.step-body{flex:1}
+.step-ttl{font-weight:700;font-size:11.5px;color:var(--text);margin-bottom:2px}
+.step-desc{font-size:10.5px;color:var(--muted);line-height:1.5}
+
+/* ─── FOOTER ─── */
+footer{border-top:1px solid var(--border);padding:1.2rem 1.5rem;max-width:1140px;margin:0 auto}
+.ft{font-family:var(--mono);font-size:9px;color:var(--faint);text-align:center;line-height:1.7}
+
+/* ─── ANIM ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.reveal{animation:fadeUp .45s ease both}
+.d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.2s}.d4{animation-delay:.28s}
+
+@media(min-width:580px){
+  main{padding:2rem 2rem 6rem}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .tracker-grid{grid-template-columns:1fr 1fr 1fr}
+  .prompt-steps{grid-template-columns:1fr 1fr}
+}
+@media(min-width:840px){
+  main{padding:2.5rem 2.5rem 6rem}
+  header{padding:0 2.5rem}
+  .tabs-nav{padding:0 2.5rem}
+  .progress-bar-wrap{padding:.6rem 2.5rem}
+  .hero{padding:2.5rem}
+  .alloc-grid{grid-template-columns:repeat(3,1fr)}
+  .fase-grid{grid-template-columns:repeat(4,1fr)}
+  .prompt-steps{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Carteira<em>·</em>Saltoleto</div>
+  <div class="hbadge">Meta R$ 1M · 10 Anos</div>
+</header>
+
+<!-- TABS NAV -->
+<nav class="tabs-nav">
+  <button class="tab-btn active" onclick="switchTab('fase1',this)" id="btn-fase1">
+    <span>Fase 1</span>
+    <span class="tab-badge badge-fase1">Fundação · Anos 1–3</span>
+  </button>
+  <button class="tab-btn fase2" onclick="switchTab('fase2',this)" id="btn-fase2">
+    <span>Fase 2</span>
+    <span class="tab-badge badge-fase2">Carteira Completa · Anos 3–10</span>
+  </button>
+</nav>
+
+<!-- PROGRESS BAR (visível na aba Fase 1) -->
+<div class="progress-bar-wrap visible" id="progress-wrap">
+  <div class="pb-label">
+    <span>Progresso para desbloquear a Fase 2</span>
+    <span id="pb-pct-label">0%</span>
+  </div>
+  <div class="pb-track"><div class="pb-fill" id="pb-fill" style="width:0%"></div></div>
+  <div class="pb-gatilhos">
+    <div class="pb-g" id="g1"><div class="dot"></div><span>Patrimônio ≥ R$ 150k</span></div>
+    <div class="pb-g" id="g2"><div class="dot"></div><span>Cada ativo ≥ R$ 15k</span></div>
+    <div class="pb-g" id="g3"><div class="dot"></div><span>Proventos ≥ R$ 600/mês</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     FASE 1
+═══════════════════════════════════════════════ -->
+<div class="tab-panel active" id="panel-fase1">
+<main>
+
+<div class="hero reveal">
+  <div class="eyebrow">Estratégia Patrimonial — Fase 1 · Maio 2026</div>
+  <h1>Concentrar para<br>Construir a Base</h1>
+  <p class="hero-sub">Com R$&nbsp;5.000/mês pulverizados em 19 ativos, a maioria receberia R$&nbsp;200–250 por mês — insuficiente para mover qualquer posição. A Fase 1 resolve isso: 7 ativos essenciais, um representante sólido de cada classe, aportes com peso real.</p>
+  <div class="kpis">
+    <div class="kpi"><p class="kpi-l">Ativos na Fase 1</p><p class="kpi-v blue-v">7</p><p class="kpi-s">vs. 19 na Fase 2</p></div>
+    <div class="kpi"><p class="kpi-l">Aporte mensal</p><p class="kpi-v green-v">R$ 5.000</p><p class="kpi-s">100% concentrado</p></div>
+    <div class="kpi"><p class="kpi-l">Horizonte</p><p class="kpi-v amber-v">2–3 anos</p><p class="kpi-s">Até ~R$ 150–180k</p></div>
+    <div class="kpi"><p class="kpi-l">Expansão</p><p class="kpi-v teal-v">+12 ativos</p><p class="kpi-s">Na Fase 2</p></div>
+  </div>
+</div>
+
+<!-- CHANGELOG V2 -->
+<div class="card reveal d1" style="border-color:rgba(240,180,41,0.25)">
+  <p class="sec-ttl" style="color:var(--amber)">⚡ Ajustes da versão v2 — O que mudou e por quê</p>
+  <div class="g2">
+    <div>
+      <div class="info-card" style="margin-bottom:8px;border-color:rgba(79,158,255,0.25)">
+        <p class="ic-ttl" style="color:var(--blue)">FIIs Papel: BTCI11 entra desde o mês 1</p>
+        <p>Antes entrava no mês 6–9. Agora entra desde o início com 8% (KNCR11 cai de 15% para 12%). Sem proteção IPCA nos primeiros meses, uma queda acelerada da Selic comprimiria o rendimento sem compensação.</p>
+      </div>
+      <div class="info-card" style="margin-bottom:8px;border-color:rgba(240,180,41,0.25)">
+        <p class="ic-ttl" style="color:var(--amber)">BBSE3: peso reduzido de 20% → 18% (teto)</p>
+        <p>BBSE3 é excelente, mas é 66% controlada pelo Banco do Brasil. Carrega risco de influência estatal análogo ao BBAS3. Teto de 18% para não concentrar exposição estatal involuntária.</p>
+      </div>
+      <div class="info-card" style="border-color:rgba(34,211,200,0.25)">
+        <p class="ic-ttl" style="color:var(--teal)">Internacional: 15% → 17% na F1 / 20% na F2</p>
+        <p>Com 83% dos ativos domésticos, cada ponto extra em IVVB11 reduz risco de deterioração fiscal brasileira. O Real tem histórico estrutural de desvalorização de longo prazo.</p>
+      </div>
+    </div>
+    <div>
+      <div class="info-card" style="margin-bottom:8px;border-color:rgba(106,130,168,0.25)">
+        <p class="ic-ttl" style="color:var(--muted)">Caixa F1: 5% IPCA+ 2031 + 5% Caixinha CDB ⚡ v4</p>
+        <p>O Tesouro Selic foi substituído pela <b>Caixinha Itaú (CDB 100% CDI, liquidez D+0)</b>: rende o mesmo, sem taxa de custódia da B3 e com resgate imediato — crises não esperam D+1. O IPCA+ 2031 segue como proteção real de longo prazo. Disciplina: caixinha do caixa estratégico separada da reserva de emergência.</p>
+      </div>
+      <div class="info-card" style="margin-bottom:8px;border-color:rgba(79,158,255,0.25)">
+        <p class="ic-ttl" style="color:var(--blue)">Capital inicial: R$ 0 ⚡ v4</p>
+        <p>Os R$ 30k existentes são <b>reserva de emergência</b> (caixinha própria, intocável) e ficam <b>fora da carteira</b>. A carteira é construída do zero, só com os R$ 5.000/mês. Projeções recalculadas.</p>
+      </div>
+      <div class="info-card" style="margin-bottom:8px;border-color:rgba(240,180,41,0.25)">
+        <p class="ic-ttl" style="color:var(--amber)">F2: TRXF11 → ALZR11 · RENT3 → RADL3 · CPLE3 → EGIE3</p>
+        <p>ALZR11: contratos atípicos longos = maior previsibilidade. RADL3: crescimento menos cíclico que RENT3. EGIE3: energia privada = menos risco político que CPLE3.</p>
+      </div>
+      <div class="info-card" style="border-color:rgba(46,204,138,0.25)">
+        <p class="ic-ttl" style="color:var(--green)">🎯 Meta antecipada — possível no ano 9</p>
+        <p>Com 14% a.a. consistente, R$ 1M pode ser atingido no ano 9. Sem capital inicial, o plano oficial segue sendo 10 anos — o cenário conservador (10% a.a.) cruza R$ 1M exatamente no ano 10. Trate o ano 9 como bônus.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKER DE GATILHOS -->
+<div class="tracker-card reveal d1">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:1.1rem">
+    <p class="tracker-title" style="margin-bottom:0">Tracker de Progresso — Gatilhos para Fase 2</p>
+    <span class="pil p-teal" style="cursor:pointer" onclick="toggleHelp()">? Como preencher</span>
+  </div>
+
+  <!-- PAINEL DE AJUDA (oculto por padrão) -->
+  <div id="tracker-help" style="display:none;margin-bottom:1rem">
+    <div style="background:rgba(34,211,200,0.07);border:1px solid rgba(34,211,200,0.2);border-radius:12px;padding:1rem 1.1rem">
+      <p style="font-weight:700;font-size:12px;color:var(--teal);margin-bottom:.75rem">📖 Como funciona o tracker</p>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.6;margin-bottom:.75rem">Preencha os 3 campos com sua situação <b style="color:var(--text)">hoje</b>. O tracker verifica se você atingiu os gatilhos para migrar para a Fase 2. Basta atingir <b style="color:var(--text)">2 dos 3</b> para fazer a transição.</p>
+      <div style="display:grid;gap:8px">
+
+        <div style="background:var(--card3);border-radius:8px;padding:.75rem .9rem">
+          <p style="font-weight:700;font-size:11.5px;color:var(--blue2);margin-bottom:4px">① Patrimônio total atual</p>
+          <p style="font-size:11px;color:var(--muted);line-height:1.55">Some o valor atual de <b style="color:var(--text)">todos os seus investimentos</b> desta carteira: cotação atual × quantidade de cotas/ações de cada ativo + saldo do caixa estratégico (caixinha CDB + Tesouro IPCA+). Não inclua a reserva de emergência.</p>
+          <p style="font-size:11px;color:var(--teal);margin-top:5px">Exemplo: 100 cotas KNCR11 × R$&nbsp;98 = R$&nbsp;9.800. Some todos os ativos → total = R$&nbsp;87.000. Digite: 87000</p>
+        </div>
+
+        <div style="background:var(--card3);border-radius:8px;padding:.75rem .9rem">
+          <p style="font-weight:700;font-size:11.5px;color:var(--blue2);margin-bottom:4px">② Menor posição individual</p>
+          <p style="font-size:11px;color:var(--muted);line-height:1.55">De todos os ativos que você tem, qual é o que tem <b style="color:var(--text)">menor valor investido</b>? Digite o valor desse ativo. O gatilho garante que nenhum ativo ficou insignificante antes de você expandir para 19.</p>
+          <p style="font-size:11px;color:var(--teal);margin-top:5px">Exemplo: WEGE3 é o que você tem menos → R$&nbsp;11.200 em WEGE3. Digite: 11200</p>
+        </div>
+
+        <div style="background:var(--card3);border-radius:8px;padding:.75rem .9rem">
+          <p style="font-weight:700;font-size:11.5px;color:var(--blue2);margin-bottom:4px">③ Proventos mensais recebidos</p>
+          <p style="font-size:11px;color:var(--muted);line-height:1.55">Quanto você recebeu de <b style="color:var(--text)">dividendos + rendimentos de FIIs</b> no último mês. FIIs pagam todo mês; ações pagam trimestralmente (use a média mensal dos últimos 3 meses se preferir).</p>
+          <p style="font-size:11px;color:var(--teal);margin-top:5px">Exemplo: KNCR11 pagou R$&nbsp;120 + HGLG11 pagou R$&nbsp;180 + BBSE3 pagou R$&nbsp;90 = R$&nbsp;390. Digite: 390</p>
+        </div>
+
+      </div>
+      <p style="font-size:10.5px;color:var(--faint);margin-top:.75rem">Os valores não são salvos — são apenas para calcular seu progresso agora.</p>
+    </div>
+  </div>
+
+  <div class="tracker-grid">
+    <div class="tracker-item">
+      <div class="tracker-item-label" style="margin-bottom:3px">① Patrimônio total atual</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:7px">Soma de todos os ativos da carteira (cotação × cotas + caixa estratégico)</div>
+      <div class="tracker-input-row">
+        <input class="tracker-input" type="text" id="t-patrimonio" placeholder="ex: 87000" oninput="updateTracker()">
+        <span class="tracker-target">Meta: R$ 150.000</span>
+        <span class="tracker-status status-pend" id="ts-patrimonio">Pendente</span>
+      </div>
+    </div>
+    <div class="tracker-item">
+      <div class="tracker-item-label" style="margin-bottom:3px">② Menor posição individual</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:7px">Valor em R$ do ativo com menor saldo na carteira</div>
+      <div class="tracker-input-row">
+        <input class="tracker-input" type="text" id="t-posicao" placeholder="ex: 11200" oninput="updateTracker()">
+        <span class="tracker-target">Meta: R$ 15.000</span>
+        <span class="tracker-status status-pend" id="ts-posicao">Pendente</span>
+      </div>
+    </div>
+    <div class="tracker-item">
+      <div class="tracker-item-label" style="margin-bottom:3px">③ Proventos mensais recebidos</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:7px">Soma dos dividendos + rendimentos de FIIs no último mês</div>
+      <div class="tracker-input-row">
+        <input class="tracker-input" type="text" id="t-proventos" placeholder="ex: 390" oninput="updateTracker()">
+        <span class="tracker-target">Meta: R$ 600</span>
+        <span class="tracker-status status-pend" id="ts-proventos">Pendente</span>
+      </div>
+    </div>
+  </div>
+  <div class="tracker-unlock" id="tracker-unlock">
+    <span class="tracker-pct" id="tracker-pct">0%</span>
+    <span id="tracker-msg">Preencha os 3 campos acima. Basta atingir 2 dos 3 gatilhos para migrar para a Fase 2.</span>
+  </div>
+</div>
+
+<!-- RACIONAL -->
+<div class="card reveal d1">
+  <p class="sec-ttl">Por que concentrar no início?</p>
+  <div class="alloc-grid">
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(79,158,255,0.25),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--blue)">3×</div>
+      <div class="alloc-name">Posição com peso real</div>
+      <div class="alloc-desc">R$&nbsp;750/mês em 1 ativo constrói posição 3× mais rápido do que R$&nbsp;250 divididos em três.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--blue),var(--blue2));width:60%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(155,127,255,0.22),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--purple)">DCA</div>
+      <div class="alloc-name">Custo médio eficiente</div>
+      <div class="alloc-desc">Você aproveita toda a volatilidade num mesmo ativo em vez de pulverizar aportes entre muitos tickers.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--purple),#b89aff);width:50%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(46,204,138,0.20),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--green)">7</div>
+      <div class="alloc-name">Simples de acompanhar</div>
+      <div class="alloc-desc">7 ativos para monitorar fundamentos, DY e vacância. 19 ativos no início seria ruído puro.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--green),#6ee7b7);width:40%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(240,180,41,0.20),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--amber)">6</div>
+      <div class="alloc-name">Diversificação real</div>
+      <div class="alloc-desc">6 classes cobertas: FII papel, tijolo, dividendos, crescimento, internacional e caixa.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--amber),#fcd34d);width:55%"></div>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="info-card">
+      <p class="ic-ttl">Caixa 10% dividido: 5% IPCA+ · 5% Caixinha CDB</p>
+      <p><b>Caixinha CDB Itaú (5%):</b> reserva de oportunidade — 100% do CDI, liquidez D+0, sem taxa de custódia. Usar para comprar crises imediatas. <b>IPCA+ 2031 (5%):</b> proteção real contra inflação no longo prazo. Não resgatar em crises (preço cai quando juros sobem). A divisão garante os dois benefícios sem conflito.</p>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">BTCI11 entra no mês 1</p>
+      <p>Diferente da versão anterior (mês 6–9), o BTCI11 entra desde o início junto ao KNCR11. Os dois juntos cobrem CDI (Selic alta) e IPCA (inflação persistente) — protegendo o FII papel em qualquer cenário de juros desde o primeiro aporte.</p>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">Rebalanceamento simplificado</p>
+      <p>Todo mês: calcule o peso real de cada ativo e direcione o aporte inteiro para o mais defasado. Com 7 ativos, leva menos de 10 minutos.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TABELA FASE 1 -->
+<div class="card reveal d2">
+  <p class="sec-ttl">Carteira Fase 1 — 7 Ativos de Fundação</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Ativo</th><th>Classe</th><th>Segmento</th><th>Peso</th><th>R$/mês</th><th>Total aportado¹</th><th>Risco</th><th>Nota</th></tr></thead>
+      <tbody id="tbody-f1"></tbody>
+      <tfoot><tr><td colspan="4">TOTAL — Fase 1 (~30 meses)</td><td>100%</td><td>R$ 5.000</td><td style="font-family:var(--mono);font-weight:700;color:var(--amber)">R$ 150.000</td><td colspan="2"></td></tr></tfoot>
+    </table>
+  </div>
+  <p style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:.6rem">¹ Total aportado = R$/mês × 30 meses (duração estimada da Fase 1 até atingir R$ 150k no cenário base). Não inclui rendimentos nem reinvestimento de proventos.</p>
+</div>
+
+<!-- RACIONAL DE SELEÇÃO FASE 1 -->
+<div class="card reveal d2">
+  <p class="sec-ttl">Racional de Seleção — Por que estes 7?</p>
+  <div class="g2">
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">KNCR11 — FII Papel CDI (12% · R$ 600/mês)</p>
+        <p>CDI puro, liquidez altíssima, portfólio de CRI high grade. Peso reduzido de 15% para 12% para abrir espaço ao BTCI11 desde o início. Âncora defensiva em ciclos de Selic alta — se a Selic cair, o BTCI11 protege o rendimento real.</p>
+      </div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">BTCI11 — FII Papel IPCA (8% · R$ 400/mês) ⚡ Entra desde o mês 1</p>
+        <p>CRI diversificado com exposição a IPCA + CDI, gestão BTG, AAA. Entra desde o início (não mais no mês 6–9). Garante proteção contra inflação imediata — se a Selic cair de forma acelerada, o BTCI11 preserva o rendimento real enquanto o KNCR11 comprime.</p>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">HGLG11 — FII Tijolo (20% · R$ 1.000/mês)</p>
+        <p>Maior e mais líquido FII logístico do Brasil. Portfólio A+, gestão CSHG 15+ anos, vacância historicamente baixa. Maior peso individual da Fase 1 — mantido. BTLG11, XPML11 e ALZR11 entram na Fase 2.</p>
+      </div>
+    </div>
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">BBSE3 — Ações Dividendos (18% · R$ 900/mês) ⚠ Cap 18%</p>
+        <p>Moat fortíssimo (rede BB Seguridade), payout elevado, baixíssima necessidade de capex. DY histórico acima de 7%. <b>Atenção:</b> 66% controlada pelo Banco do Brasil — carrega risco de influência estatal análogo ao BBAS3. Teto em 18% (era 20%) para não concentrar exposição estatal. ITSA4, EGIE3 e BBAS3 entram na Fase 2.</p>
+      </div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">WEGE3 — Ações Crescimento (15% · R$ 750/mês)</p>
+        <p>Melhor compounder brasileiro: expansão internacional consolidada, ROE consistentemente acima de 25%, sem alavancagem. Atenção ao valuation: P/L acima de 45× → considerar reduzir o aporte naquele mês. TOTS3, EQTL3 e RADL3 entram na Fase 2.</p>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">IVVB11 — Internacional (17% · R$ 850/mês) ↑</p>
+        <p>ETF S&P 500 em BRL, mais líquido e menor spread. Hedge natural em dólar — peso aumentado de 15% para 17% para maior proteção cambial desde o início. Com 85% dos ativos no Brasil nos primeiros meses, cada ponto extra aqui reduz risco de deterioração fiscal local. WRLD11 e NASD11 entram na Fase 2.</p>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">Caixa — IPCA+ 2031 (5%) + Caixinha CDB (5%) ⚡ v4</p>
+        <p><b>Por que dois instrumentos?</b> O IPCA+ cai quando os juros sobem — exatamente quando você quer usar o caixa para comprar ativos em crise. A divisão resolve: <b>Caixinha CDB (100% CDI) = reserva de oportunidade imediata</b> (D+0, preço estável, sem custódia); <b>IPCA+ = proteção real do poder de compra</b> acumulada no longo prazo. Os dois recebem R$ 250/mês cada. Importante: caixinha do caixa estratégico ≠ caixinha da reserva de emergência (R$ 30k, intocável).</p>
+      </div>
+    </div>
+  </div>
+  <div class="al al-info">
+    <span class="al-icon">ℹ</span>
+    <span><b>Caixa Estratégico dividido — 5% IPCA+ 2031 + 5% Caixinha CDB Itaú:</b>
+    <br><br>
+    <b>Tesouro IPCA+ 2031 (5% · R$&nbsp;250/mês):</b> Garante ganho real acima da inflação no longo prazo. Não usar para resgates em crises de curto prazo — o preço oscila com a curva de juros se resgatado antes do vencimento. Função: proteção estrutural do poder de compra do caixa.
+    <br><br>
+    <b>Caixinha CDB Itaú (5% · R$&nbsp;250/mês):</b> CDB 100% do CDI, liquidez D+0 (resgate imediato, qualquer dia), garantia FGC até R$&nbsp;250k, sem taxa de custódia. IR tabela regressiva (22,5% → 15%). Usar para comprar crises imediatas (queda > 10% em ativo AAA). Função: reserva de oportunidade. <b>Criar caixinha exclusiva</b> ("Caixa estratégico — só crises"), separada da reserva de emergência.
+    <br><br>
+    <b>Reserva de emergência (R$&nbsp;30k):</b> permanece em caixinha própria ("Emergência — não tocar") e <b>não faz parte da carteira</b> nem do caixa estratégico.
+    <br><br>
+    A troca do Tesouro Selic pela caixinha (v4) melhora a execução: rendimento equivalente, liquidez D+0 em vez de D+1 e zero fricção operacional — sem perder a lógica da v3 (separar reserva de oportunidade de proteção real).</span>
+  </div>
+</div>
+
+<!-- PROJEÇÃO FASE 1 -->
+<div class="card reveal d3">
+  <p class="sec-ttl">Projeção Patrimonial — 3 Cenários (10 Anos)</p>
+  <div class="g2" style="align-items:center;gap:1.25rem;margin-bottom:1rem">
+    <div class="chart-wrap"><canvas id="cProj1"></canvas></div>
+    <div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="info-card">
+          <p class="kpi-l">Conservador — 10% a.a.</p>
+          <p style="font-weight:800;font-size:20px;color:var(--muted);letter-spacing:-.02em">~R$ 1,00M</p>
+          <p style="font-size:10px;color:var(--muted)">Meta atingida no limite do Ano 10</p>
+        </div>
+        <div class="info-card">
+          <p class="kpi-l">Base — 12% a.a.</p>
+          <p style="font-weight:800;font-size:20px;color:var(--blue);letter-spacing:-.02em">~R$ 1,11M</p>
+          <p style="font-size:10px;color:var(--muted)">Cenário realista · R$ 1M no ano 9–10</p>
+        </div>
+        <div class="info-card" style="border-color:rgba(46,204,138,0.3)">
+          <p class="kpi-l">Excelente — 14% a.a. 🎯</p>
+          <p style="font-weight:800;font-size:20px;color:var(--green);letter-spacing:-.02em">~R$ 1,23M</p>
+          <p style="font-size:10px;color:var(--green)">R$ 1M possível no Ano 9 — meta antecipada</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:.5rem">
+    <div class="pr-row"><span class="pr-k">Fim estimado da Fase 1 (cenário base)</span><span class="pr-v" style="color:var(--amber)">Mês 27–33 · ~R$ 150–180k</span></div>
+    <div class="pr-row"><span class="pr-k">Retorno base ponderado</span><span class="pr-v" style="color:var(--blue)">12% a.a.</span></div>
+    <div class="pr-row"><span class="pr-k">FIIs Papel — retorno estimado</span><span class="pr-v">13,5% a.a. (12% DY + 1,5% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">FIIs Tijolo — retorno estimado</span><span class="pr-v">14% a.a. (9% DY + 5% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">Ações Dividendos — retorno estimado</span><span class="pr-v">13% a.a. (8% DY + 5% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">Ações Crescimento — retorno estimado</span><span class="pr-v">15% a.a. (5% DY + 10% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">Internacional — retorno estimado</span><span class="pr-v">10% a.a. (dólar + retorno S&P)</span></div>
+    <div class="pr-row"><span class="pr-k">Aportes totais (10 anos · sem capital inicial)</span><span class="pr-v">R$ 600.000</span></div>
+    <div class="pr-row"><span class="pr-k" style="color:var(--green);font-weight:700">🎯 Meta antecipada — cenário excelente 14% a.a.</span><span class="pr-v" style="color:var(--green)">Ano 9 · ~R$ 1,03M</span></div>
+  </div>
+  <div class="al al-ok" style="margin-top:.75rem">
+    <span class="al-icon">🎯</span>
+    <span><b>Antecipação para o ano 9 é possível no cenário excelente.</b> Com 14% a.a. consistente, a carteira atinge ~R$ 1M no ano 9. No cenário base (12% a.a.), o patrimônio estará em ~R$ 640k no ano 7 e cruza R$ 1M entre os anos 9 e 10. Partindo do zero, a disciplina nos aportes mensais pesa ainda mais que o retorno nos primeiros anos.</span>
+  </div>
+</div>
+
+<!-- PROTOCOLO REBALANCEAMENTO FASE 1 -->
+<div class="card reveal d3">
+  <p class="sec-ttl">Protocolo de Rebalanceamento — Fase 1</p>
+  <div class="rebal-table tbl-wrap">
+    <table>
+      <thead><tr><th>Cenário</th><th>Desvio</th><th>Ação</th><th>Urgência</th></tr></thead>
+      <tbody>
+        <tr><td>Ativo abaixo do peso</td><td><span class="num wl">−1% a −3%</span></td><td class="hl">Aumentar aporte neste ativo</td><td><span class="pil p-amber">Mensal</span></td></tr>
+        <tr><td>Muito abaixo do peso</td><td><span class="num rl">−4% ou mais</span></td><td class="hl">Direcionar dividendos reinvestidos para o ativo</td><td><span class="pil p-red">Imediata</span></td></tr>
+        <tr><td>Ativo acima do peso</td><td><span class="num wl">+1% a +3%</span></td><td class="wl">Reduzir aporte, realocar nos defasados</td><td><span class="pil p-amber">Mensal</span></td></tr>
+        <tr><td>Muito acima do peso</td><td><span class="num rl">+5% ou mais</span></td><td class="wl">Pausar aportes; redirecionar tudo para defasados</td><td><span class="pil p-red">Imediata</span></td></tr>
+        <tr><td>Fundamento deteriorado</td><td><span class="num">Qualquer</span></td><td class="rl">Substituição imediata — não esperar ciclo</td><td><span class="pil p-red">Crítica</span></td></tr>
+        <tr><td>Crise / queda &gt; 10% em ativo AAA</td><td><span class="num hl">Qualquer</span></td><td class="hl">Usar caixinha CDB (caixa) para comprar</td><td><span class="pil p-green">Oportunidade</span></td></tr>
+        <tr><td>WEGE3 com P/L &gt; 45×</td><td><span class="num wl">Valuation</span></td><td class="wl">Reduzir aporte mensal em WEGE3 naquele mês — redirecionar para defasados</td><td><span class="pil p-amber">Mensal</span></td></tr>
+        <tr><td>LPA em queda 3 trimestres seguidos (BBSE3)</td><td><span class="num rl">Lucro/ação</span></td><td class="wl">Pausar aportes; investigar causa — se estrutural, acionar critério de saída</td><td><span class="pil p-red">Trimestral</span></td></tr>
+        <tr><td>Nº de ações cresce &gt; 5% em 12m sem lucro proporcional</td><td><span class="num rl">Diluição</span></td><td class="wl">Pausar aportes; reavaliar tese — follow-on dilutivo destrói dividendo/ação</td><td><span class="pil p-red">Imediata</span></td></tr>
+        <tr><td>Payout &gt; 100% por 2 trimestres seguidos</td><td><span class="num rl">Sustentabilidade</span></td><td class="wl">Pausar aportes — empresa distribui mais do que ganha; dividendo em risco</td><td><span class="pil p-red">Trimestral</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="g3" style="margin-top:.9rem">
+    <div class="info-card">
+      <p class="ic-ttl">📅 Mensal</p>
+      <ul>
+        <li>Calcular peso real de cada um dos 7 ativos</li>
+        <li>Direcionar aporte ao mais defasado</li>
+        <li>Reinvestir proventos de FIIs e dividendos</li>
+        <li>Verificar se caixa (caixinha CDB + IPCA+) está em ~10%</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">📊 Trimestral</p>
+      <ul>
+        <li>Revisar cenário de Selic e IPCA</li>
+        <li>Checar DY e vacância de KNCR11, BTCI11, HGLG11</li>
+        <li>Saúde do dividendo (BBSE3): LPA crescente? Nº de ações estável? Payout ≤ 100%?</li>
+        <li>WEGE3: P/L vs. gatilho de 45× e crescimento de receita</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">📋 Gatilhos Fase 2</p>
+      <ul>
+        <li>Patrimônio ≥ R$ 150.000?</li>
+        <li>Cada ativo com posição ≥ R$ 15.000?</li>
+        <li>Proventos mensais ≥ R$ 600–700?</li>
+        <li>Se sim em 2 dos 3: migrar para Fase 2</li>
+      </ul>
+    </div>
+  </div>
+  <div class="info-card" style="margin-top:.9rem">
+    <p class="ic-ttl">🔬 Saúde do Dividendo — por que LPA, diluição e payout importam</p>
+    <p>Dividendo por ação = lucro líquido × payout ÷ número de ações. O DY de hoje não diz nada sobre o de amanhã: o que sustenta o dividendo é o <b>lucro por ação (LPA) crescente</b> com <b>base acionária estável</b>. Três sinais vitais, checados trimestralmente para BBSE3 (e, na Fase 2, ITSA4, EGIE3 e BBAS3): <b>(1) LPA</b> — caindo 3 trimestres seguidos sem reinvestimento que justifique = alerta; <b>(2) Diluição</b> — número de ações crescendo &gt; 5% em 12 meses sem lucro proporcional significa que cada ação passa a valer uma fatia menor do mesmo bolo (follow-on dilutivo); o movimento inverso (recompra/cancelamento de ações, como a BBSE3 fez em mar/26) aumenta o LPA e beneficia o minoritário; <b>(3) Payout</b> — acima de 100% por 2 trimestres = a empresa paga mais do que lucra, corte de dividendo é questão de tempo. Para WEGE3 a lógica é inversa: payout baixo é saudável (reinvestimento em crescimento) — o guardrail dela é valuation (P/L 45×), não payout.</p>
+  </div>
+  <div class="info-card" style="margin-top:8px;border-color:rgba(46,204,138,0.3)">
+    <p class="ic-ttl" style="color:var(--green)">📤 Protocolo Pré-Aporte — ritual mensal obrigatório</p>
+    <p>Antes de executar qualquer aporte, rode a análise completa: <b>(1)</b> copie o prompt pré-aporte abaixo; <b>(2)</b> preencha os campos entre colchetes com suas posições atuais e proventos do mês; <b>(3)</b> cole em um agente de IA com acesso à web (Claude, ChatGPT, Gemini); <b>(4)</b> execute o aporte conforme a tabela recomendada — ou questione a recomendação se algo não fizer sentido. A análise cobre: mercado e macro (Selic, IPCA, Focus), saúde do dividendo (LPA, diluição, payout), valuation (P/L da WEGE3), pesos reais vs. alvo, critérios de saída e gatilhos da Fase 2. Tempo total: ~10 minutos.</p>
+  </div>
+  <div class="prompt-box" style="margin-top:8px">
+    <div class="prompt-box-header">
+      <div class="prompt-box-label">Prompt Pré-Aporte Mensal — preencha e cole na IA</div>
+      <button class="copy-btn" id="copyBtn3" onclick="copyPrompt('promptContent3','copyBtn3')">
+        <span id="copyIcon3">⧉</span><span id="copyLabel3">Copiar prompt</span>
+      </button>
+    </div>
+    <div class="prompt-text" id="promptContent3"></div>
+  </div>
+</div>
+
+<!-- FASES DA JORNADA -->
+<div class="card reveal d4">
+  <p class="sec-ttl">Fases da Jornada</p>
+  <div class="fase-grid">
+    <div class="fase-card current">
+      <div class="fase-num">Anos 1–3 <span class="pil p-blue" style="font-size:7px">VOCÊ ESTÁ AQUI</span></div>
+      <div class="fase-ttl">Fundação</div>
+      <p class="fase-desc">7 ativos essenciais. Aportes concentrados. Reinvestir 100% dos proventos. Foco total: volume de cotas e ações.</p>
+      <div class="fase-bar" style="background:linear-gradient(90deg,var(--blue),var(--blue2))"></div>
+    </div>
+    <div class="fase-card">
+      <div class="fase-num">Anos 3–6</div>
+      <div class="fase-ttl">Expansão + Aceleração</div>
+      <p class="fase-desc">Patrimônio ≥ R$ 150k: expandir para 19 ativos (Fase 2). Os juros compostos começam a superar os aportes mensais.</p>
+      <div class="fase-bar" style="background:linear-gradient(90deg,var(--purple),#b89aff)"></div>
+    </div>
+    <div class="fase-card">
+      <div class="fase-num">Anos 7–9</div>
+      <div class="fase-ttl">Decolagem</div>
+      <p class="fase-desc">Cenário base: R$1M atingido no ano 10. Planejar transição: definir quanto dos proventos começar a consumir.</p>
+      <div class="fase-bar" style="background:linear-gradient(90deg,var(--green),#6ee7b7)"></div>
+    </div>
+    <div class="fase-card">
+      <div class="fase-num">Ano 10+</div>
+      <div class="fase-ttl">Independência</div>
+      <p class="fase-desc">Renda passiva entre R$&nbsp;8k–11k/mês. Reinvestir parcialmente para manter crescimento. Carteira autossustentável.</p>
+      <div class="fase-bar" style="background:linear-gradient(90deg,var(--amber),#fcd34d)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROMPT FASE 1 -->
+<div class="prompt-section reveal d4">
+  <div class="prompt-header">
+    <div class="prompt-icon">🤖</div>
+    <div>
+      <div class="prompt-title">Prompt para Agente de IA — Fase 1</div>
+      <div class="prompt-subtitle">Cole em qualquer LLM (Claude, ChatGPT, Gemini) junto com esta página</div>
+    </div>
+    <span class="pil p-teal" style="margin-left:auto">Pronto para usar</span>
+  </div>
+  <div class="prompt-steps">
+    <div class="step-card"><div class="step-num" style="background:rgba(79,158,255,0.15);color:var(--blue)">1</div><div class="step-body"><div class="step-ttl">Copie o prompt</div><div class="step-desc">Clique em "Copiar prompt" abaixo</div></div></div>
+    <div class="step-card"><div class="step-num" style="background:rgba(155,127,255,0.15);color:var(--purple)">2</div><div class="step-body"><div class="step-ttl">Abra o agente de IA</div><div class="step-desc">Claude com busca ativada é o ideal</div></div></div>
+    <div class="step-card"><div class="step-num" style="background:rgba(46,204,138,0.15);color:var(--green)">3</div><div class="step-body"><div class="step-ttl">Cole e envie</div><div class="step-desc">Anexe este HTML se possível</div></div></div>
+    <div class="step-card"><div class="step-num" style="background:rgba(240,180,41,0.15);color:var(--amber)">4</div><div class="step-body"><div class="step-ttl">Informe sua posição</div><div class="step-desc">O agente pedirá seus saldos atuais</div></div></div>
+  </div>
+  <div class="prompt-box" style="margin-top:1rem">
+    <div class="prompt-box-header">
+      <div class="prompt-box-label">Prompt completo — Fase 1</div>
+      <button class="copy-btn" id="copyBtn1" onclick="copyPrompt('promptContent1','copyBtn1')">
+        <span id="copyIcon1">⧉</span><span id="copyLabel1">Copiar prompt</span>
+      </button>
+    </div>
+    <div class="prompt-text" id="promptContent1"></div>
+  </div>
+  <div class="al al-info" style="margin-top:.9rem">
+    <span class="al-icon">ℹ</span>
+    <span>Para melhores resultados, use um agente com <b>acesso à internet em tempo real</b> (ex: Claude com busca ativada). Isso permite consultar cotações e DY atuais antes de recomendar os aportes do mês.</span>
+  </div>
+</div>
+
+</main>
+</div><!-- /panel-fase1 -->
+
+<!-- ═══════════════════════════════════════════════
+     FASE 2
+═══════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-fase2">
+<main>
+
+<div class="hero teal-hero reveal">
+  <div class="eyebrow teal">Estratégia Patrimonial Consolidada · Maio 2026</div>
+  <h1 class="teal-grad">Carteira Completa —<br>19 Ativos</h1>
+  <p class="hero-sub">Estrutura otimizada combinando os melhores ativos de cada classe, diversificação internacional e protocolo de rebalanceamento detalhado. Disponível a partir de patrimônio ≥ R$&nbsp;150k.</p>
+  <div class="kpis">
+    <div class="kpi"><p class="kpi-l">Capital inicial</p><p class="kpi-v blue-v">R$ 0</p><p class="kpi-s">Reserva de R$ 30k fora da carteira</p></div>
+    <div class="kpi"><p class="kpi-l">Aporte mensal</p><p class="kpi-v green-v">R$ 5.000</p><p class="kpi-s">100% reinvestido</p></div>
+    <div class="kpi"><p class="kpi-l">Meta — cenário base</p><p class="kpi-v amber-v">Ano 10</p><p class="kpi-s">~R$ 1,11M (12% a.a.)</p></div>
+    <div class="kpi"><p class="kpi-l">Retorno esperado</p><p class="kpi-v teal-v">10–14%</p><p class="kpi-s">faixa conserv.–excelente</p></div>
+  </div>
+</div>
+
+<!-- ALOCAÇÃO MACRO -->
+<div class="card reveal d1">
+  <p class="sec-ttl teal-ttl">Alocação Estratégica — R$ 5.000/mês</p>
+  <div class="alloc-grid">
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(79,158,255,0.25),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--blue)">15%</div>
+      <div class="alloc-name">FIIs Papel</div>
+      <div class="alloc-desc">CDI + CRI + IPCA. Proteção em ciclos de Selic alta. R$ 750/mês.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--blue),var(--blue2));width:15%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(155,127,255,0.22),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--purple)">20%</div>
+      <div class="alloc-name">FIIs Tijolo</div>
+      <div class="alloc-desc">Logística, shopping, varejo. Valoriza na queda de juros. R$ 1.000/mês.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--purple),#b89aff);width:20%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(46,204,138,0.20),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--green)">25%</div>
+      <div class="alloc-name">Ações Dividendos</div>
+      <div class="alloc-desc">Empresas resilientes e geradoras de caixa. R$ 1.250/mês.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--green),#6ee7b7);width:25%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(240,180,41,0.20),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--amber)">20%</div>
+      <div class="alloc-name">Ações Crescimento</div>
+      <div class="alloc-desc">Compounders brasileiros. Motor do crescimento patrimonial. R$ 1.000/mês.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--amber),#fcd34d);width:20%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(34,211,200,0.20),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--teal)">20%</div>
+      <div class="alloc-name">Internacional ↑</div>
+      <div class="alloc-desc">Dolarização reforçada. ETFs S&P 500, global e Nasdaq. R$ 1.000/mês. Proteção estrutural contra depreciação do Real.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--teal),#5eead4);width:20%"></div>
+    </div>
+    <div class="alloc-card">
+      <div class="alloc-glow" style="background:radial-gradient(circle,rgba(106,130,168,0.15),transparent)"></div>
+      <div class="alloc-pct" style="color:var(--muted)">5%</div>
+      <div class="alloc-name">Caixa Estratégico</div>
+      <div class="alloc-desc">Caixinha CDB Itaú (100% CDI). Liquidez D+0 para comprar crises. R$ 250/mês.</div>
+      <div class="alloc-bar" style="background:linear-gradient(90deg,var(--muted),#94a3b8);width:5%"></div>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="info-card">
+      <p class="ic-ttl">Por que FIIs nos dois ciclos?</p>
+      <p>Papel protege em Selic alta. Tijolo valoriza quando os juros caem. Os dois juntos funcionam em qualquer cenário — sem precisar prever o mercado.</p>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">Por que 20% internacional? ↑</p>
+      <p>Hedge cambial real contra depreciação estrutural do Real — aumentado de 15% para 20%. O Real historicamente perde valor contra o dólar no longo prazo. ETFs de S&P 500 e global descorrelacionam da política fiscal brasileira, especialmente em crises locais. Com 80% dos ativos ainda no Brasil, os 20% dolarizados são proteção essencial, não especulação.</p>
+    </div>
+    <div class="info-card">
+      <p class="ic-ttl">Por que 45% em ações?</p>
+      <p>Motor do crescimento patrimonial. Dividendos geram renda recorrente; crescimento entrega valorização. Sem ações, 12% a.a. não é atingível com aportes de R$&nbsp;5k.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TABELA FASE 2 -->
+<div class="card reveal d2">
+  <p class="sec-ttl teal-ttl">Carteira Completa — 19 Ativos</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Ativo</th><th>Classe</th><th>Segmento</th><th>Peso</th><th>R$/mês</th><th>Total aportado²</th><th>Risco</th><th>Nota</th></tr></thead>
+      <tbody id="tbody-f2"></tbody>
+      <tfoot><tr><td colspan="4">TOTAL — Fase 2 (~90 meses)</td><td>100%</td><td>R$ 5.000</td><td style="font-family:var(--mono);font-weight:700;color:var(--teal)">R$ 450.000</td><td colspan="2"></td></tr></tfoot>
+    </table>
+  </div>
+  <p style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:.6rem">² Total aportado = R$/mês × 90 meses (meses restantes após a Fase 1 até o ano 10). Não inclui rendimentos nem reinvestimento de proventos. Total geral das duas fases: R$ 600.000 em aportes (sem capital inicial — a reserva de emergência de R$ 30.000 fica fora da carteira).</p>
+</div>
+
+<!-- RACIONAL FASE 2 -->
+<div class="card reveal d2">
+  <p class="sec-ttl teal-ttl">Racional de Seleção dos Ativos</p>
+  <div class="g2">
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">FIIs Papel — por que estes três?</p>
+        <ul>
+          <li><b>BTCI11</b> — CRI diversificado, spread real sobre CDI, gestão BTG, AAA</li>
+          <li><b>KNHF11</b> — híbrido papel com blend CDI+IPCA, gestão Kinea, AAA</li>
+          <li><b>KNCR11</b> — CDI puro, liquidez altíssima. Âncora da carteira em ciclos de alta de juro</li>
+        </ul>
+      </div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">FIIs Tijolo — diversificação real de segmento</p>
+        <ul>
+          <li><b>HGLG11</b> — logística premium, portfólio A+, gestão Hedge, AAA</li>
+          <li><b>BTLG11</b> — logística BTG, alta ocupação, preço justo</li>
+          <li><b>XPML11</b> — shopping premium, vacância mínima, crescimento de NOI</li>
+          <li><b>ALZR11</b> — contratos atípicos longos, maior previsibilidade de receita. Substituiu TRXF11 (varejo/híbrido tem risco de vacância maior e contratos mais curtos)</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">Caixinha CDB Itaú (100% CDI) — Caixa Estratégico</p>
+        <p>Rentabilidade 100% do CDI · Liquidez D+0 · Garantia FGC até R$&nbsp;250k · Sem taxa de custódia · IR tabela regressiva (15% após 2 anos) · Isento de IOF após 30 dias. Reduzido para 5% na Fase 2 pois a carteira já tem diversificação suficiente para absorver volatilidade. Na Fase 2 a caixinha substitui o IPCA+ como caixa: liquidez imediata é prioritária quando o patrimônio já está diversificado. Manter em caixinha exclusiva, separada da reserva de emergência (R$&nbsp;30k).</p>
+      </div>
+    </div>
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">Ações Dividendos — resiliência + controle de risco estatal</p>
+        <ul>
+          <li><b>BBSE3 (7%)</b> — melhor payout do setor de seguros. Cap em 7%: controlada 66% pelo BB, carrega risco de influência estatal análogo ao BBAS3</li>
+          <li><b>ITSA4 (6%)</b> — holding com desconto estrutural sobre Itaú, governança AAA</li>
+          <li><b>EGIE3 (7%)</b> — energia elétrica privada, dividendos previsíveis e histórico consistente. Substituiu CPLE3 para reduzir exposição estatal no portfólio de energia</li>
+          <li><b>BBAS3 (5%)</b> — banco público, risco político real. Cap reduzido para 5% (era 6%). Critério de saída: intervenção política clara na estratégia</li>
+        </ul>
+      </div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">Ações Crescimento — compounders de qualidade</p>
+        <ul>
+          <li><b>WEGE3</b> — o melhor compounder brasileiro. Crescimento orgânico + internacional, sem alavancagem. Gatilho de valuation: se P/L > 45×, reduzir aporte naquele mês</li>
+          <li><b>TOTS3</b> — liderança em ERP corporativo, receita recorrente crescente</li>
+          <li><b>EQTL3</b> — crescimento em distribuição elétrica, dividendos previsíveis. Menor volatilidade que RENT3</li>
+          <li><b>RADL3</b> — farmácias com crescimento orgânico consistente e baixa ciclicalidade. Substituiu RENT3 (mobilidade é mais dependente de ciclo econômico)</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">Internacional — dolarização reforçada (20% ↑)</p>
+        <ul>
+          <li><b>IVVB11 (8%)</b> — S&P 500, base da exposição global. Peso aumentado para 8%</li>
+          <li><b>WRLD11 (7%)</b> — mercado global ex-EUA, descorrelação adicional. Peso aumentado para 7%</li>
+          <li><b>NASD11 (5%)</b> — peso aumentado para 5%. Atenção à sobreposição com big tech do IVVB11 — manter monitorado</li>
+          <li style="color:var(--amber);font-weight:600">Total internacional sobe de 15% para 20%: proteção estrutural contra depreciação do Real no longo prazo</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJEÇÃO FASE 2 -->
+<div class="card reveal d3">
+  <p class="sec-ttl teal-ttl">Projeção Patrimonial — 3 Cenários (10 Anos)</p>
+  <div class="g2" style="align-items:center;gap:1.25rem;margin-bottom:1rem">
+    <div class="chart-wrap"><canvas id="cProj2"></canvas></div>
+    <div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="info-card">
+          <p class="kpi-l">Conservador — 10% a.a.</p>
+          <p style="font-weight:800;font-size:20px;color:var(--muted);letter-spacing:-.02em">~R$ 1,00M</p>
+          <p style="font-size:10px;color:var(--muted)">Meta atingida no limite do prazo</p>
+        </div>
+        <div class="info-card">
+          <p class="kpi-l">Base — 12% a.a.</p>
+          <p style="font-weight:800;font-size:20px;color:var(--blue);letter-spacing:-.02em">~R$ 1,11M</p>
+          <p style="font-size:10px;color:var(--muted)">Cenário realista, histórico compatível</p>
+        </div>
+        <div class="info-card">
+          <p class="kpi-l">Excelente — 14% a.a.</p>
+          <p style="font-weight:800;font-size:20px;color:var(--green);letter-spacing:-.02em">~R$ 1,23M</p>
+          <p style="font-size:10px;color:var(--muted)">Requer mercado favorável consistente</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:.5rem">
+    <div class="pr-row"><span class="pr-k">Retorno base ponderado</span><span class="pr-v" style="color:var(--blue)">12% a.a.</span></div>
+    <div class="pr-row"><span class="pr-k">FIIs Papel — retorno estimado</span><span class="pr-v">13,5% a.a. (12% DY + 1,5% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">FIIs Tijolo — retorno estimado</span><span class="pr-v">14% a.a. (9% DY + 5% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">Ações Dividendos — retorno estimado</span><span class="pr-v">13% a.a. (8% DY + 5% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">Ações Crescimento — retorno estimado</span><span class="pr-v">15% a.a. (5% DY + 10% val.)</span></div>
+    <div class="pr-row"><span class="pr-k">Internacional — retorno estimado</span><span class="pr-v">10% a.a. (dólar + retorno S&P)</span></div>
+    <div class="pr-row"><span class="pr-k">Aportes totais (10 anos · sem capital inicial)</span><span class="pr-v">R$ 600.000</span></div>
+    <div class="pr-row"><span class="pr-k" style="color:var(--green);font-weight:700">🎯 Meta antecipada — cenário excelente 14% a.a.</span><span class="pr-v" style="color:var(--green)">Ano 9 · ~R$ 1,03M</span></div>
+    <div class="pr-row"><span class="pr-k" style="color:var(--blue);font-weight:700">📈 Cenário base 12% a.a. no ano 7</span><span class="pr-v" style="color:var(--blue)">~R$ 640k → R$1M no ano 9–10</span></div>
+  </div>
+  <div class="al al-ok" style="margin-top:.75rem">
+    <span class="al-icon">🎯</span>
+    <span><b>Ano 9 é possível — mas requer excelência.</b> Com 14% a.a. consistente (mercado favorável + reinvestimento total + disciplina nos aportes), a meta de R$ 1M é atingível no ano 9. O planejamento oficial é de 10 anos; sem capital inicial, o cenário conservador atinge a meta exatamente no limite do prazo. Trate o ano 9 como bônus, não como expectativa base.</span>
+  </div>
+  <div class="al al-warn" style="margin-top:.5rem">
+    <span class="al-icon">⚠</span>
+    <span>Projeções assumem reinvestimento de 100% dos proventos e aportes mensais constantes. O retorno de 12% a.a. é alcançável mas não garantido — crises, mudanças regulatórias e deterioração de fundamentos podem reduzir os resultados. Sem capital inicial, o cenário conservador (10% a.a.) entrega R$&nbsp;1M exatamente no ano 10 — a margem de segurança agora depende da <b>constância dos aportes</b>; qualquer aporte extra antecipa a meta.</span>
+  </div>
+</div>
+
+<!-- PROTOCOLO REBALANCEAMENTO FASE 2 -->
+<div class="card reveal d3">
+  <p class="sec-ttl teal-ttl">Protocolo de Rebalanceamento</p>
+  <div class="rebal-table tbl-wrap">
+    <table>
+      <thead><tr><th>Cenário</th><th>Desvio</th><th>Ação</th><th>Urgência</th></tr></thead>
+      <tbody>
+        <tr><td>Ativo abaixo do peso</td><td><span class="num wl">−1% a −3%</span></td><td class="hl">Aumentar aporte neste ativo</td><td><span class="pil p-amber">Mensal</span></td></tr>
+        <tr><td>Muito abaixo do peso</td><td><span class="num rl">−4% ou mais</span></td><td class="hl">Direcionar dividendos reinvestidos para o ativo</td><td><span class="pil p-red">Imediata</span></td></tr>
+        <tr><td>Ativo acima do peso</td><td><span class="num wl">+1% a +3%</span></td><td class="wl">Reduzir aporte, realocar nos defasados</td><td><span class="pil p-amber">Mensal</span></td></tr>
+        <tr><td>Muito acima do peso</td><td><span class="num rl">+5% ou mais</span></td><td class="wl">Pausar aportes; redirecionar tudo para defasados</td><td><span class="pil p-red">Imediata</span></td></tr>
+        <tr><td>Fundamento deteriorado</td><td><span class="num">Qualquer</span></td><td class="rl">Substituição imediata — não esperar ciclo</td><td><span class="pil p-red">Crítica</span></td></tr>
+        <tr><td>Crise / queda &gt; 10% em ativo AAA</td><td><span class="num hl">Qualquer</span></td><td class="hl">Usar caixinha CDB (caixa 5%) para comprar</td><td><span class="pil p-green">Oportunidade</span></td></tr>
+        <tr><td>WEGE3 com P/L &gt; 45×</td><td><span class="num wl">Valuation</span></td><td class="wl">Reduzir aporte mensal em WEGE3 — redirecionar para defasados</td><td><span class="pil p-amber">Mensal</span></td></tr>
+        <tr><td>BBSE3 + BBAS3 somados &gt; 12%</td><td><span class="num wl">Concentração</span></td><td class="wl">Pausar aportes em ambos até rebalancear para dentro do limite</td><td><span class="pil p-amber">Mensal</span></td></tr>
+        <tr><td>LPA em queda 3 trimestres (ações de dividendos)</td><td><span class="num rl">Lucro/ação</span></td><td class="wl">Pausar aportes; investigar — se estrutural, acionar critério de saída</td><td><span class="pil p-red">Trimestral</span></td></tr>
+        <tr><td>Nº de ações cresce &gt; 5% em 12m sem lucro proporcional</td><td><span class="num rl">Diluição</span></td><td class="wl">Pausar aportes; reavaliar tese da ação diluída</td><td><span class="pil p-red">Imediata</span></td></tr>
+        <tr><td>Payout &gt; 100% por 2 trimestres seguidos</td><td><span class="num rl">Sustentabilidade</span></td><td class="wl">Pausar aportes — dividendo em risco de corte</td><td><span class="pil p-red">Trimestral</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="g3" style="margin-top:.9rem">
+    <div class="info-card"><p class="ic-ttl">📅 Mensal</p><ul><li>Comparar pesos reais vs. alvo</li><li>Direcionar aporte para os ativos defasados</li><li>Reinvestir proventos recebidos no mês</li><li>Verificar se caixa estratégico está em 5%</li></ul></div>
+    <div class="info-card"><p class="ic-ttl">📊 Trimestral</p><ul><li>Revisar cenário de Selic e IPCA</li><li>Checar vacância e DY dos FIIs</li><li>Saúde do dividendo das ações: LPA crescente, nº de ações estável, payout ≤ 100%</li><li>Revisar performance dos ETFs internacionais</li></ul></div>
+    <div class="info-card"><p class="ic-ttl">📋 Anual</p><ul><li>Revisão completa de pesos estratégicos</li><li>Avaliar se algum ativo deve ser substituído</li><li>Ajustar projeção com retornos realizados</li><li>Definir meta do próximo ano</li></ul></div>
+  </div>
+</div>
+
+<!-- CRITÉRIOS DE SAÍDA -->
+<div class="card reveal d3">
+  <p class="sec-ttl teal-ttl">Critérios de Saída — Quando Substituir</p>
+  <div class="g2">
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">🔴 FIIs — Sinais de saída</p>
+        <ul>
+          <li>Queda de DY &gt; 30% sem justificativa temporária</li>
+          <li>Vacância acima de 15% por 2 trimestres seguidos</li>
+          <li>Troca de gestora sem histórico comprovado</li>
+          <li>Emissão dilutiva acima de 20% sem perspectiva de valorização</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">🔴 Ações — Sinais de saída</p>
+        <ul>
+          <li>LPA em queda por 3 trimestres consecutivos sem justificativa de investimento</li>
+          <li>Diluição: nº de ações crescendo &gt; 5% em 12 meses sem crescimento proporcional do lucro</li>
+          <li>Payout acima de 100% por 2 trimestres seguidos (distribui mais do que ganha)</li>
+          <li>Deterioração de margem operacional por 3 trimestres</li>
+          <li>Mudança de política de dividendos sem perspectiva de retorno</li>
+          <li>Alavancagem acima do histórico sem motivo estratégico</li>
+          <li>Para BBAS3: intervenção política clara na estratégia do banco</li>
+          <li>Para BBSE3: mudança de política de dividendos imposta pelo controlador BB</li>
+          <li>Para WEGE3: P/L persistentemente &gt; 50× por 2+ trimestres → reduzir posição gradualmente</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="info-card" style="margin-bottom:8px">
+        <p class="ic-ttl">🟡 O que NÃO justifica saída</p>
+        <ul>
+          <li>Queda de cotação isolada sem deterioração de fundamentos</li>
+          <li>Notícia negativa de curto prazo em setor sólido</li>
+          <li>Selic subindo temporariamente (FII tijolo vai sofrer — é esperado)</li>
+          <li>Comparar DY atual com rentabilidade passada</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <p class="ic-ttl">✅ Regras de ouro</p>
+        <ul>
+          <li>Nunca vender por ruído de mercado ou manchete de jornal</li>
+          <li>Crises são oportunidades — usar o caixa estratégico</li>
+          <li>Se a tese original ainda vale, a queda é desconto, não problema</li>
+          <li>Revisão de portfólio ≠ operação frequente</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FASES FASE 2 -->
+<div class="card reveal d4">
+  <p class="sec-ttl teal-ttl">Fases da Jornada</p>
+  <div class="fase-grid">
+    <div class="fase-card"><div class="fase-num">Anos 1–3</div><div class="fase-ttl">Fundação</div><p class="fase-desc">7 ativos essenciais (Fase 1). Aportes concentrados. Reinvestir 100%. Foco: volume de cotas.</p><div class="fase-bar" style="background:linear-gradient(90deg,var(--blue),var(--blue2))"></div></div>
+    <div class="fase-card current"><div class="fase-num">Anos 3–6 <span class="pil p-teal" style="font-size:7px">VOCÊ ESTÁ AQUI</span></div><div class="fase-ttl">Expansão + Aceleração</div><p class="fase-desc">19 ativos ativos. Os juros compostos começam a superar os aportes. Revisar pesos anualmente.</p><div class="fase-bar" style="background:linear-gradient(90deg,var(--teal),#5eead4)"></div></div>
+    <div class="fase-card"><div class="fase-num">Anos 7–9</div><div class="fase-ttl">Decolagem</div><p class="fase-desc">Cenário base: R$1M atingido no ano 10. Planejar transição de consumo parcial dos proventos.</p><div class="fase-bar" style="background:linear-gradient(90deg,var(--green),#6ee7b7)"></div></div>
+    <div class="fase-card"><div class="fase-num">Ano 10+</div><div class="fase-ttl">Independência</div><p class="fase-desc">Renda passiva entre R$&nbsp;8k–11k/mês. Reinvestir parcialmente. Carteira autossustentável.</p><div class="fase-bar" style="background:linear-gradient(90deg,var(--amber),#fcd34d)"></div></div>
+  </div>
+</div>
+
+<!-- PROMPT FASE 2 -->
+<div class="prompt-section reveal d4">
+  <div class="prompt-header">
+    <div class="prompt-icon">🤖</div>
+    <div>
+      <div class="prompt-title">Prompt para Agente de IA — Fase 2</div>
+      <div class="prompt-subtitle">Cole em qualquer LLM (Claude, ChatGPT, Gemini) junto com esta página</div>
+    </div>
+    <span class="pil p-teal" style="margin-left:auto">Pronto para usar</span>
+  </div>
+  <div class="prompt-steps">
+    <div class="step-card"><div class="step-num" style="background:rgba(79,158,255,0.15);color:var(--blue)">1</div><div class="step-body"><div class="step-ttl">Copie o prompt</div><div class="step-desc">Clique em "Copiar prompt" abaixo</div></div></div>
+    <div class="step-card"><div class="step-num" style="background:rgba(155,127,255,0.15);color:var(--purple)">2</div><div class="step-body"><div class="step-ttl">Abra o agente de IA</div><div class="step-desc">Claude com busca ativada é o ideal</div></div></div>
+    <div class="step-card"><div class="step-num" style="background:rgba(46,204,138,0.15);color:var(--green)">3</div><div class="step-body"><div class="step-ttl">Cole e envie</div><div class="step-desc">Anexe este HTML se possível</div></div></div>
+    <div class="step-card"><div class="step-num" style="background:rgba(240,180,41,0.15);color:var(--amber)">4</div><div class="step-body"><div class="step-ttl">Informe sua carteira</div><div class="step-desc">O agente pedirá seus saldos atuais</div></div></div>
+  </div>
+  <div class="prompt-box" style="margin-top:1rem">
+    <div class="prompt-box-header">
+      <div class="prompt-box-label">Prompt completo — Fase 2</div>
+      <button class="copy-btn" id="copyBtn2" onclick="copyPrompt('promptContent2','copyBtn2')">
+        <span id="copyIcon2">⧉</span><span id="copyLabel2">Copiar prompt</span>
+      </button>
+    </div>
+    <div class="prompt-text" id="promptContent2"></div>
+  </div>
+  <div class="al al-info" style="margin-top:.9rem">
+    <span class="al-icon">ℹ</span>
+    <span>Para melhores resultados, use um agente com <b>acesso à internet em tempo real</b> (ex: Claude com busca ativada, ChatGPT com Browsing, Perplexity). Isso permite consultar cotações e notícias atuais de cada ativo antes de recomendar os aportes.</span>
+  </div>
+</div>
+
+</main>
+</div><!-- /panel-fase2 -->
+
+<footer>
+  <p class="ft">Carteira Saltoleto · Estratégia Patrimonial Consolidada · Junho 2026 · v4</p>
+  <p class="ft">Não constitui recomendação de investimento. Valide preços-teto vigentes antes de aportar. Consulte um assessor certificado.</p>
+</footer>
+
+<script>
+/* ── TAB SWITCH ─────────────────────────────────── */
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('progress-wrap').classList.toggle('visible', id === 'fase1');
+  window.scrollTo({top:0, behavior:'smooth'});
+  // re-render charts se necessário
+  if (id === 'fase2' && !chart2rendered) { renderChart2(); chart2rendered = true; }
+}
+
+/* ── TOGGLE AJUDA ───────────────────────────────── */
+function toggleHelp() {
+  const el = document.getElementById('tracker-help');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+/* ── TRACKER DE GATILHOS ────────────────────────── */
+function parseBRL(str) {
+  return parseFloat(str.replace(/[R$\s.]/g,'').replace(',','.')) || 0;
+}
+function updateTracker() {
+  const pat = parseBRL(document.getElementById('t-patrimonio').value);
+  const pos = parseBRL(document.getElementById('t-posicao').value);
+  const prov= parseBRL(document.getElementById('t-proventos').value);
+
+  const g1ok = pat  >= 150000;
+  const g2ok = pos  >= 15000;
+  const g3ok = prov >= 600;
+
+  setStatus('ts-patrimonio', 'g1', g1ok);
+  setStatus('ts-posicao',    'g2', g2ok);
+  setStatus('ts-proventos',  'g3', g3ok);
+
+  const done = [g1ok, g2ok, g3ok].filter(Boolean).length;
+  const pct  = Math.round(done / 3 * 100);
+  document.getElementById('tracker-pct').textContent = pct + '%';
+  document.getElementById('pb-fill').style.width = pct + '%';
+  document.getElementById('pb-pct-label').textContent = pct + '%';
+
+  const unlock = document.getElementById('tracker-unlock');
+  const msg    = document.getElementById('tracker-msg');
+  if (done >= 2) {
+    unlock.classList.add('unlocked');
+    msg.innerHTML = '🎉 <b>Você atingiu os gatilhos para a Fase 2!</b> Está na hora de expandir para os 19 ativos da carteira completa. Clique na aba <b>Fase 2</b> acima.';
+  } else if (done === 1) {
+    unlock.classList.remove('unlocked');
+    msg.textContent = `1 de 3 gatilhos atingido. Faltam ${3-done} para desbloquear a Fase 2 (precisar de 2 dos 3).`;
+  } else if (pat > 0 || pos > 0 || prov > 0) {
+    unlock.classList.remove('unlocked');
+    msg.textContent = 'Nenhum gatilho atingido ainda. Continue aportando disciplinadamente — os juros compostos vão acelerar a partir do mês 18–24.';
+  }
+}
+function setStatus(elId, gId, ok) {
+  const el  = document.getElementById(elId);
+  const gel = document.getElementById(gId);
+  if (ok) {
+    el.textContent = '✓ Atingido'; el.className = 'tracker-status status-done';
+    gel.classList.add('done');
+  } else {
+    el.textContent = 'Pendente'; el.className = 'tracker-status status-pend';
+    gel.classList.remove('done');
+  }
+}
+
+/* ── COPY PROMPT ────────────────────────────────── */
+function copyPrompt(contentId, btnId) {
+  const text = document.getElementById(contentId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(btnId);
+    const num = btnId.replace('copyBtn','');
+    const lbl = document.getElementById('copyLabel'+num);
+    const ico = document.getElementById('copyIcon'+num);
+    btn.classList.add('copied'); lbl.textContent='Copiado!'; ico.textContent='✓';
+    setTimeout(()=>{ btn.classList.remove('copied'); lbl.textContent='Copiar prompt'; ico.textContent='⧉'; },2500);
+  }).catch(()=>{
+    const el=document.getElementById(contentId);
+    const r=document.createRange(); r.selectNodeContents(el);
+    window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
+  });
+}
+
+/* ── DADOS ATIVOS ────────────────────────────────── */
+const ATIVOS_F1 = [
+  ['KNCR11','FII Papel','CDI puro — âncora defensiva',12,'AAA','COMPRA','#4f9eff'],
+  ['BTCI11','FII Papel','CRI IPCA+CDI — desde o início',8,'AAA','COMPRA','#4f9eff'],
+  ['HGLG11','FII Tijolo','Logística premium',20,'AAA','COMPRA','#9b7fff'],
+  ['BBSE3','Ações Div.','Seguros / BB Seguridade (teto 18%)',18,'AAA','COMPRA','#2ecc8a'],
+  ['WEGE3','Ações Cresc.','Indústria / Global',15,'AAA','COMPRA','#f0b429'],
+  ['IVVB11','Internacional','ETF S&P 500 (USD) — hedge cambial',17,'AAA','COMPRA','#22d3c8'],
+  ['Tesouro IPCA+ 2031','Caixa','Ganho real acima da inflação · longo prazo',5,'AAA','—','#6a82a8'],
+  ['Caixinha CDB Itaú','Caixa','100% CDI · D+0 · reserva de oportunidade',5,'AAA','—','#6a82a8'],
+];
+const GRUPOS_F1 = [
+  {label:'FIIs Papel — 20% · R$ 1.000/mês', i0:0, i1:2},
+  {label:'FIIs Tijolo — 20% · R$ 1.000/mês', i0:2, i1:3},
+  {label:'Ações Dividendos — 18% · R$ 900/mês', i0:3, i1:4},
+  {label:'Ações Crescimento — 15% · R$ 750/mês', i0:4, i1:5},
+  {label:'Internacional — 17% · R$ 850/mês', i0:5, i1:6},
+  {label:'Caixa Estratégico — 10% · R$ 500/mês (5% IPCA+ · 5% Caixinha CDB)', i0:6, i1:8},
+];
+
+const ATIVOS_F2 = [
+  ['BTCI11','FII Papel','CRI diversificado IPCA+CDI',6,'AAA','COMPRA','#4f9eff'],
+  ['KNHF11','FII Papel','Híbrido CDI+IPCA',5,'AAA','COMPRA','#4f9eff'],
+  ['KNCR11','FII Papel','CDI puro',4,'AAA','NEUTRO','#4f9eff'],
+  ['HGLG11','FII Tijolo','Logística premium',6,'AAA','COMPRA','#9b7fff'],
+  ['BTLG11','FII Tijolo','Logística BTG',4,'AAA','COMPRA','#9b7fff'],
+  ['XPML11','FII Tijolo','Shopping premium',5,'AA','COMPRA','#9b7fff'],
+  ['ALZR11','FII Tijolo','Contratos atípicos longos',5,'AAA','COMPRA','#9b7fff'],
+  ['BBSE3','Ações Div.','Seguros — cap 7%',7,'A','COMPRA','#2ecc8a'],
+  ['ITSA4','Ações Div.','Holding Itaú',6,'AAA','COMPRA','#2ecc8a'],
+  ['EGIE3','Ações Div.','Energia elétrica privada',7,'AAA','COMPRA','#2ecc8a'],
+  ['BBAS3','Ações Div.','Bancário — risco político (cap 5%)',5,'A','MONITORAR','#2ecc8a'],
+  ['WEGE3','Ações Cresc.','Indústria / Global',6,'AAA','COMPRA','#f0b429'],
+  ['TOTS3','Ações Cresc.','Tecnologia / ERP',5,'AA','COMPRA','#f0b429'],
+  ['EQTL3','Ações Cresc.','Infraestrutura elétrica',5,'A','COMPRA','#f0b429'],
+  ['RADL3','Ações Cresc.','Farmácias / Crescimento previsível',4,'AA','COMPRA','#f0b429'],
+  ['IVVB11','Internacional','S&P 500',8,'AAA','COMPRA','#22d3c8'],
+  ['WRLD11','Internacional','Global ex-EUA',7,'AAA','COMPRA','#22d3c8'],
+  ['NASD11','Internacional','Nasdaq',5,'AA','COMPRA','#22d3c8'],
+  ['Caixinha CDB Itaú','Caixa','CDB 100% CDI · D+0',5,'AAA','—','#6a82a8'],
+];
+const GRUPOS_F2 = [
+  {label:'FIIs Papel — 15% · R$ 750/mês', i0:0, i1:3},
+  {label:'FIIs Tijolo — 20% · R$ 1.000/mês', i0:3, i1:7},
+  {label:'Ações Dividendos — 25% · R$ 1.250/mês', i0:7, i1:11},
+  {label:'Ações Crescimento — 20% · R$ 1.000/mês', i0:11, i1:15},
+  {label:'Internacional — 20% · R$ 1.000/mês', i0:15, i1:18},
+  {label:'Caixa Estratégico — 5% · R$ 250/mês', i0:18, i1:19},
+];
+
+function riscoPil(r){
+  if(r==='AAA') return `<span class="pil p-green">${r}</span>`;
+  if(r==='AA')  return `<span class="pil p-blue">${r}</span>`;
+  if(r==='A')   return `<span class="pil p-purple">${r}</span>`;
+  return `<span class="pil">${r}</span>`;
+}
+function notaPil(n){
+  if(n==='COMPRA')    return `<span class="pil p-green">${n}</span>`;
+  if(n==='NEUTRO')    return `<span class="pil p-amber">${n}</span>`;
+  if(n==='MONITORAR') return `<span class="pil p-amber">${n}</span>`;
+  return `<span class="pil">${n}</span>`;
+}
+
+function buildTable(ativos, grupos, tbodyId, meses) {
+  const tbody = document.getElementById(tbodyId);
+  let idx = 1;
+  grupos.forEach(g => {
+    const sub = document.createElement('tr');
+    sub.className = 'sub-row';
+    sub.innerHTML = `<td colspan="9">${g.label}</td>`;
+    tbody.appendChild(sub);
+    ativos.slice(g.i0, g.i1).forEach(a => {
+      const tr = document.createElement('tr');
+      const aporte = Math.round(a[3] * 50);
+      const total  = aporte * meses;
+      tr.innerHTML = `
+        <td style="font-family:var(--mono);font-size:9px;color:var(--muted)">${String(idx++).padStart(2,'0')}</td>
+        <td><span class="tk">${a[0]}</span></td>
+        <td><span class="pil" style="background:${a[6]}22;color:${a[6]};border:1px solid ${a[6]}44;font-size:7px">${a[1]}</span></td>
+        <td style="color:var(--muted);font-size:11.5px">${a[2]}</td>
+        <td class="hl">${a[3]}%</td>
+        <td style="font-family:var(--mono);font-weight:600;color:var(--text)">R$ ${aporte.toLocaleString('pt-BR')}</td>
+        <td style="font-family:var(--mono);font-weight:700;color:var(--amber)">R$ ${total.toLocaleString('pt-BR')}</td>
+        <td>${riscoPil(a[4])}</td>
+        <td>${notaPil(a[5])}</td>`;
+      tbody.appendChild(tr);
+    });
+  });
+}
+buildTable(ATIVOS_F1, GRUPOS_F1, 'tbody-f1', 30);
+buildTable(ATIVOS_F2, GRUPOS_F2, 'tbody-f2', 90);
+
+/* ── GRÁFICOS ────────────────────────────────────── */
+function calcPatrimonio(retAa, anos) {
+  const rm = Math.pow(1 + retAa, 1/12) - 1;
+  let p = 0;
+  const result = [];
+  for(let m = 1; m <= anos*12; m++) {
+    p = p * (1 + rm) + 5000;
+    if(m % 12 === 0) result.push(Math.round(p / 1000));
+  }
+  return result;
+}
+const anos      = ['A1','A2','A3','A4','A5','A6','A7','A8','A9','A10'];
+const conserv   = calcPatrimonio(0.10, 10);
+const base      = calcPatrimonio(0.12, 10);
+const excelent  = calcPatrimonio(0.14, 10);
+
+const chartConfig = (extraDatasets) => ({
+  type: 'line',
+  data: {
+    labels: anos,
+    datasets: [
+      {label:'Conservador 10%',data:conserv,borderColor:'#6a82a8',backgroundColor:'rgba(106,130,168,0.05)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#6a82a8',tension:.4,fill:true},
+      {label:'Base 12%',data:base,borderColor:'#4f9eff',backgroundColor:'rgba(79,158,255,0.08)',borderWidth:2.5,pointRadius:3,pointBackgroundColor:'#4f9eff',tension:.4,fill:true},
+      {label:'Excelente 14%',data:excelent,borderColor:'#2ecc8a',backgroundColor:'rgba(46,204,138,0.06)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#2ecc8a',tension:.4,fill:true},
+      {label:'Meta R$1M',data:Array(10).fill(1000),borderColor:'rgba(240,180,41,0.5)',borderWidth:1.5,borderDash:[6,4],pointRadius:0,fill:false},
+      ...extraDatasets
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{position:'bottom',labels:{color:'#6a82a8',font:{family:'JetBrains Mono',size:9},boxWidth:10,padding:12}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: R$ ${c.raw}k`}}
+    },
+    scales:{
+      y:{ticks:{color:'#475569',font:{family:'JetBrains Mono',size:9},callback:v=>'R$'+v+'k'},grid:{color:'rgba(79,158,255,0.06)'},border:{color:'rgba(79,158,255,0.06)'}},
+      x:{ticks:{color:'#475569',font:{family:'JetBrains Mono',size:9}},grid:{color:'rgba(79,158,255,0.04)'},border:{color:'rgba(79,158,255,0.04)'}}
+    }
+  }
+});
+
+new Chart(document.getElementById('cProj1'), chartConfig([
+  {label:'Fim Fase 1 (~R$ 200k)',data:Array(10).fill(200),borderColor:'rgba(34,211,200,0.5)',borderWidth:1.5,borderDash:[4,4],pointRadius:0,fill:false},
+  {label:'Alvo Ano 9 (R$1M)',data:[null,null,null,null,null,null,null,null,1000,null],borderColor:'rgba(46,204,138,0.8)',backgroundColor:'rgba(46,204,138,0.15)',borderWidth:0,pointRadius:[0,0,0,0,0,0,0,0,8,0],pointBackgroundColor:'#2ecc8a',fill:false}
+]));
+
+let chart2rendered = false;
+function renderChart2() {
+  new Chart(document.getElementById('cProj2'), chartConfig([]));
+}
+
+/* ── PROMPTS ─────────────────────────────────────── */
+const PROMPT_F1 = `# ATIVAÇÃO DE SKILL — ESPECIALISTA EM INVESTIMENTOS BRASILEIROS
+
+Você é um especialista sênior em investimentos de renda variável e renda fixa do mercado brasileiro, com foco em construção patrimonial de longo prazo. Perfil:
+
+- Analista fundamentalista com experiência em FIIs, ações de dividendos e compounders brasileiros
+- Especialista em alocação de ativos e rebalanceamento de carteiras
+- Conhecimento profundo: ciclos de Selic, IPCA, regulação CVM, isenção IR em FIIs, tributação de ações
+- Capacidade de interpretar DY, PVP, vacância, FFO, P/L, ROE
+- Perfil conservador na comunicação: direto, sem promessas de retorno garantido
+
+---
+
+## CONTEXTO — FASE 1 (Anos 1–3)
+
+Investidor na Fase 1: concentrar aportes em 7 ativos essenciais antes de expandir para 19. Meta: R$ 1.000.000 em 10 anos, R$ 5.000/mês, capital inicial R$ 0 (reserva de emergência de R$ 30.000 fica fora da carteira, em caixinha própria).
+
+**Alocação alvo — Fase 1 (v2):**
+- KNCR11 (FII Papel CDI puro): 12% → R$ 600/mês
+- BTCI11 (FII Papel CRI IPCA+CDI — desde o mês 1): 8% → R$ 400/mês
+- HGLG11 (FII Tijolo Logística): 20% → R$ 1.000/mês
+- BBSE3 (Ações Dividendos / Seguros — teto 18%): 18% → R$ 900/mês
+- WEGE3 (Ações Crescimento / Indústria — gatilho P/L 45×): 15% → R$ 750/mês
+- IVVB11 (Internacional / ETF S&P 500): 17% → R$ 850/mês
+- Caixa Estratégico: 10% → R$ 500/mês (5% Tesouro IPCA+ 2031 + 5% Caixinha CDB Itaú 100% CDI)
+
+**Caixinha CDB Itaú (100% CDI):**
+- Rentabilidade: 100% do CDI · sem taxa de custódia
+- Liquidez: D+0 (resgate imediato, qualquer dia)
+- Garantia FGC até R$ 250.000
+- IR: tabela regressiva — 22,5% até 180 dias → 15% acima de 720 dias
+- Manter em caixinha exclusiva, separada da reserva de emergência
+- Isenção de IOF após 30 dias · contratação direto no app Itaú
+- Tesouro IPCA+ 2031: compra via tesouro.gov.br ou home broker
+
+**Gatilhos para migrar para Fase 2:**
+- Patrimônio ≥ R$ 150.000, OU
+- Cada ativo com posição ≥ R$ 15.000–20.000, OU
+- Proventos mensais ≥ R$ 600–700
+(basta atingir 2 dos 3)
+
+---
+
+## ETAPA 1 — ANÁLISE DE MERCADO ATUAL
+
+Pesquise agora a situação de cada ativo:
+
+**FIIs (KNCR11, HGLG11, BTCI11):**
+- Cotação atual e variação 30 dias
+- DY últimos 12 meses
+- PVP atual
+- Sinal: COMPRA / NEUTRO / AGUARDAR + justificativa
+- Eventos relevantes recentes
+
+**Ações (BBSE3, WEGE3):**
+- Cotação e variação 30 dias
+- DY projetado e P/L atual
+- SAÚDE DO DIVIDENDO (BBSE3): LPA últimos 4 trimestres (crescente?), nº total de ações em 12 meses (diluição > 5%?), payout (≤ 100%?)
+- VALUATION (WEGE3): P/L vs. gatilho de 45× — payout baixo aqui é saudável (reinvestimento)
+- Margem de segurança vs. preço justo
+- Sinal: COMPRA / NEUTRO / AGUARDAR + justificativa
+- Eventos relevantes recentes
+
+**ETF (IVVB11):**
+- Cotação em BRL e variação
+- Performance do S&P 500 subjacente
+- Tendência câmbio USD/BRL
+
+**Caixa (Caixinha CDB + IPCA+ 2031):**
+- CDI/Selic atual e expectativa Focus 6 meses
+- Rendimento líquido estimado (após IR tabela regressiva)
+- Recomendação: manter 10% ou ajustar?
+
+**Macro:**
+- Selic e expectativa Copom
+- IPCA acumulado 12 meses
+- Cenário favorece KNCR11 (CDI) ou BTCI11 (IPCA)? Momento de aumentar HGLG11 tijolo?
+
+Finalize com semáforo: 🟢 COMPRA / 🟡 NEUTRO / 🔴 AGUARDAR para cada ativo.
+
+---
+
+## ETAPA 2 — SITUAÇÃO REAL DO INVESTIDOR
+
+Solicite ao investidor:
+- Cada ativo: quantidade de cotas/ações e valor total investido
+- Caixa: saldo da caixinha CDB (caixa estratégico) e do Tesouro IPCA+ 2031 — NÃO incluir a reserva de emergência
+- BTCI11 já foi iniciado?
+- Algum ativo fora da Fase 1?
+
+---
+
+## ETAPA 3 — RECOMENDAÇÃO DE APORTE
+
+1. Calcule peso atual vs. alvo de cada ativo
+2. Aplique protocolo de rebalanceamento:
+   - Desvio -1% a -3%: aumentar aporte
+   - Desvio -4% ou mais: prioridade máxima
+   - Desvio +1% a +3%: reduzir aporte
+   - Desvio +5% ou mais: pausar aportes
+3. Não aportar em ativo 🔴 mesmo defasado
+4. Checar gatilhos de saúde do dividendo: LPA em queda 3 trimestres, diluição > 5% em 12m, payout > 100% por 2 trimestres → se acionado, pausar aporte no ativo e sinalizar
+5. Gere tabela: Ativo | Peso atual | Peso alvo | Desvio | Sinal | Aporte (R$) | Justificativa
+6. Total deve somar R$ 5.000
+
+---
+
+## ETAPA 4 — AVALIAÇÃO DE GATILHO FASE 2
+
+1. Patrimônio próximo de R$ 150k? Quais ativos abrir primeiro?
+2. Algum ativo com posição ≥ R$ 15k?
+3. Renda passiva mensal atual estimada?
+4. BTCI11: é hora de iniciar posição?
+5. Uma recomendação objetiva para os próximos 3 meses.
+
+---
+
+## REGRAS
+
+- Seja direto. Não enrole.
+- Fundamente com números reais consultados
+- Nunca prometa retorno garantido
+- Para o caixa (caixinha CDB / IPCA+): informe sempre o rendimento líquido (já descontando IR)
+- Separe fato (dados) de opinião (análise)`;
+
+const PROMPT_F2 = `# ATIVAÇÃO DE SKILL — ESPECIALISTA EM INVESTIMENTOS BRASILEIROS
+
+Você é um especialista sênior em investimentos de renda variável e renda fixa do mercado brasileiro, com foco em construção patrimonial de longo prazo. Perfil:
+
+- Analista fundamentalista com experiência em FIIs, ações de dividendos e compounders brasileiros
+- Especialista em alocação de ativos e rebalanceamento de carteiras
+- Conhecimento profundo: ciclos de Selic, IPCA, regulação CVM, isenção IR em FIIs, tributação de ações
+- Capacidade de interpretar DY, PVP, vacância, FFO, P/L, ROE
+- Perfil conservador na comunicação: direto, sem promessas de retorno garantido
+
+---
+
+## CONTEXTO — FASE 2 (Carteira Completa · Anos 3–10)
+
+Investidor na Fase 2: carteira expandida para 19 ativos. Patrimônio já ≥ R$ 150k. Meta: R$ 1.000.000 em 10 anos, R$ 5.000/mês.
+
+**Alocação alvo — Fase 2 (v2):**
+- FIIs Papel: 15% → R$ 750/mês (BTCI11 6%, KNHF11 5%, KNCR11 4%)
+- FIIs Tijolo: 20% → R$ 1.000/mês (HGLG11 6%, BTLG11 4%, XPML11 5%, ALZR11 5%)
+- Ações Dividendos: 25% → R$ 1.250/mês (BBSE3 7%, ITSA4 6%, EGIE3 7%, BBAS3 5%) — BBSE3+BBAS3 cap total 12%
+- Ações Crescimento: 20% → R$ 1.000/mês (WEGE3 6%, TOTS3 5%, EQTL3 5%, RADL3 4%)
+- Internacional: 20% → R$ 1.000/mês (IVVB11 8%, WRLD11 7%, NASD11 5%) — subiu de 15% para 20%
+- Caixa Estratégico: 5% → R$ 250/mês (Caixinha CDB Itaú 100% CDI · D+0)
+
+**Caixinha CDB Itaú (100% CDI):**
+- Rentabilidade: 100% do CDI · sem taxa de custódia · garantia FGC
+- Liquidez: D+0 · IR 15% após 2 anos · Isento de IOF após 30 dias
+- Caixinha exclusiva, separada da reserva de emergência (R$ 30k)
+
+**Premissas de retorno:**
+- Conservador: 10% a.a. → ~R$ 1,00M (capital inicial R$ 0)
+- Base: 12% a.a. → ~R$ 1,11M
+- Excelente: 14% a.a. → ~R$ 1,23M (R$ 1M possível no ano 9)
+
+---
+
+## ETAPA 1 — ANÁLISE DE MERCADO ATUAL
+
+**FIIs (BTCI11, KNHF11, KNCR11, HGLG11, BTLG11, XPML11, ALZR11):**
+- Cotação atual e variação 30 dias
+- DY últimos 12 meses
+- PVP atual
+- Sinal: COMPRA / NEUTRO / AGUARDAR + justificativa
+- Eventos relevantes recentes
+
+**Ações BR (BBSE3, ITSA4, EGIE3, BBAS3, WEGE3, TOTS3, EQTL3, RADL3):**
+- Cotação e variação 30 dias
+- DY projetado e P/L
+- SAÚDE DO DIVIDENDO (ações de dividendos — BBSE3, ITSA4, EGIE3, BBAS3): LPA últimos 4 trimestres (crescente?), nº de ações em 12 meses (diluição > 5%?), payout (≤ 100%?)
+- Crescimento (WEGE3, TOTS3, EQTL3, RADL3): payout baixo é saudável — avaliar valuation e crescimento de receita
+- Margem de segurança vs. preço justo
+- Sinal + justificativa
+- Eventos relevantes
+
+**ETFs (IVVB11, WRLD11, NASD11):**
+- Cotação em BRL e variação
+- Performance do índice subjacente
+- Tendência câmbio USD/BRL
+
+**Macro:**
+- Selic atual e expectativa Copom
+- IPCA acumulado 12 meses
+- Cenário macro favorece papel ou tijolo? Ações ou renda fixa?
+
+Finalize com semáforo completo de todos os 19 ativos.
+
+---
+
+## ETAPA 2 — SITUAÇÃO REAL DO INVESTIDOR
+
+Solicite ao investidor:
+- Para cada ativo: quantidade de cotas/ações e valor total investido
+- Caixa: saldo da caixinha CDB (caixa estratégico) — NÃO incluir a reserva de emergência
+- Há ativos fora da estratégia?
+- Alguma restrição pessoal?
+
+---
+
+## ETAPA 3 — RECOMENDAÇÃO DE APORTE
+
+1. Calcule peso atual vs. alvo de cada ativo
+2. Aplique protocolo:
+   - Desvio -1% a -3%: aumentar aporte
+   - Desvio -4%+: prioridade máxima
+   - Desvio +1% a +3%: reduzir aporte
+   - Desvio +5%+: pausar aportes
+3. Não aportar em ativo 🔴 mesmo defasado
+4. Gere tabela: Ativo | Peso atual | Peso alvo | Desvio | Sinal | Aporte (R$) | Justificativa
+5. Total = R$ 5.000
+
+---
+
+## ETAPA 4 — VALIDAÇÃO DA ESTRATÉGIA
+
+1. Meta de R$1M em 10 anos ainda é realista com cenário atual?
+2. Alocação setorial adequada? Concentração excessiva?
+3. Algum ativo com deterioração que justifique troca?
+4. Peso de 15% em internacional calibrado para o câmbio atual?
+5. Uma recomendação objetiva para os próximos 3 meses.
+
+---
+
+## REGRAS
+
+- Seja direto. Não enrole.
+- Fundamente com números reais consultados (cotação, DY, PVP, etc.)
+- Nunca prometa retorno garantido. Use "estimado", "projetado", "histórico"
+- Se um dado não estiver disponível, diga explicitamente
+- Sinalize claramente quando uma recomendação envolve maior risco (ex: BBAS3 com risco político)
+- Separe fato (dados) de opinião (análise)
+- Ao final de cada etapa, pergunte se quer aprofundar antes de avançar`;
+
+const PROMPT_APORTE = `# ANÁLISE PRÉ-APORTE MENSAL — CARTEIRA SALTOLETO (FASE 1)
+
+Você é um especialista sênior em investimentos do mercado brasileiro. Estratégia de referência: https://saltoleto.github.io/renda-passiva (leia antes de responder). Meta: R$ 1M em 10 anos · R$ 5.000/mês · capital inicial R$ 0 · reserva de emergência fora da carteira.
+
+Mês/ano da análise: [MM/AAAA] · Valor do aporte: R$ [5000]
+
+## MINHA POSIÇÃO ATUAL (preencher)
+- KNCR11: [qtd] cotas · total R$ [valor]
+- BTCI11: [qtd] cotas · total R$ [valor]
+- HGLG11: [qtd] cotas · total R$ [valor]
+- BBSE3: [qtd] ações · total R$ [valor]
+- WEGE3: [qtd] ações · total R$ [valor]
+- IVVB11: [qtd] cotas · total R$ [valor]
+- Caixinha CDB (caixa estratégico): R$ [valor]
+- Tesouro IPCA+ 2031: R$ [valor]
+- Proventos recebidos no último mês: R$ [valor]
+- Observações do mês (opcional): [ex.: aporte extra, evento relevante]
+
+## O QUE VOCÊ DEVE FAZER
+
+1. MERCADO E MACRO — pesquise agora: Selic e expectativa Copom, IPCA 12m, Boletim Focus, câmbio USD/BRL. Cenário favorece CDI (KNCR11), IPCA (BTCI11) ou tijolo (HGLG11)?
+
+2. ANÁLISE POR ATIVO — cotação atual, variação 30 dias e:
+   - FIIs: DY 12m, P/VP, vacância (HGLG11), eventos recentes
+   - BBSE3 (SAÚDE DO DIVIDENDO): LPA últimos 4 trimestres — crescente? Nº total de ações em 12m — diluição > 5%? Payout — acima de 100%? Próximo dividendo anunciado?
+   - WEGE3 (VALUATION): P/L atual vs. gatilho de 45×; crescimento de receita
+   - IVVB11: S&P 500 e tendência do dólar
+
+3. SEMÁFORO — 🟢 COMPRA / 🟡 NEUTRO / 🔴 AGUARDAR para cada ativo, com justificativa de 1 linha.
+
+4. PESOS E REBALANCEAMENTO — calcule o peso real de cada ativo vs. alvo (KNCR11 12% · BTCI11 8% · HGLG11 20% · BBSE3 18% teto · WEGE3 15% · IVVB11 17% · caixa 10%). Aplique o protocolo: priorizar defasados; nunca aportar em ativo 🔴; respeitar tetos; pausar se gatilho de saúde do dividendo acionado.
+
+5. TABELA FINAL DE APORTE — Ativo | Peso atual | Peso alvo | Desvio | Sinal | Aporte R$ | Justificativa. Total = valor do aporte.
+
+6. ALERTAS — algum critério de saída acionado? Algum gatilho da Fase 2 atingido (patrimônio ≥ R$ 150k · menor posição ≥ R$ 15k · proventos ≥ R$ 600/mês — 2 de 3)?
+
+## REGRAS
+- Fundamente com dados reais consultados agora; cite as fontes
+- Separe fato de opinião; nunca prometa retorno garantido
+- Seja direto: a saída principal é a tabela de aporte do item 5`;
+
+document.getElementById('promptContent1').textContent = PROMPT_F1;
+document.getElementById('promptContent3').textContent = PROMPT_APORTE;
+document.getElementById('promptContent2').textContent = PROMPT_F2;
+</script>
+</body>
+</html>
